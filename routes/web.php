@@ -1,0 +1,115 @@
+<?php
+
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProfileController;
+use Illuminate\Support\Facades\Auth;
+
+// Public
+Route::get('/', function () {
+    return redirect()->route('login');
+});
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+require __DIR__ . '/auth.php';
+
+// ADMIN ROUTES
+
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
+
+    // Dashboard
+    Route::get('/dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
+
+    // Siswa
+    Route::resource('siswa', App\Http\Controllers\Admin\SiswaController::class);
+    Route::post('siswa/import', [App\Http\Controllers\Admin\SiswaController::class, 'import'])->name('siswa.import');
+
+    // Guru
+    Route::resource('guru', App\Http\Controllers\Admin\GuruController::class);
+
+    // Kelas & Jurusan
+    Route::resource('kelas', App\Http\Controllers\Admin\KelasController::class);
+    Route::resource('jurusan', App\Http\Controllers\Admin\JurusanController::class);
+
+    // Mapel
+    Route::resource('mapel', App\Http\Controllers\Admin\MapelController::class);
+
+    // Jadwal
+    Route::resource('jadwal', App\Http\Controllers\Admin\JadwalController::class);
+    Route::get('jadwal/check-bentrok', [App\Http\Controllers\Admin\JadwalController::class, 'checkBentrok'])->name('jadwal.check-bentrok');
+
+    // Pengumuman
+    Route::resource('pengumuman', App\Http\Controllers\Admin\PengumumanController::class);
+
+    // Users
+    Route::get('users', [App\Http\Controllers\Admin\UserController::class, 'index'])->name('users.index');
+    Route::post('users/{user}/reset-password', [App\Http\Controllers\Admin\UserController::class, 'resetPassword'])->name('users.reset-password');
+    Route::post('users/{user}/toggle-status', [App\Http\Controllers\Admin\UserController::class, 'toggleStatus'])->name('users.toggle-status');
+});
+
+
+// GURU ROUTES
+
+Route::middleware(['auth', 'role:guru'])->prefix('guru')->name('guru.')->group(function () {
+
+    Route::get('/dashboard', [App\Http\Controllers\Guru\DashboardController::class, 'index'])->name('dashboard');
+
+    // Nilai
+    Route::get('nilai', [App\Http\Controllers\Guru\NilaiController::class, 'index'])->name('nilai.index');
+    Route::get('nilai/input/{kelas_id}/{mapel_id}', [App\Http\Controllers\Guru\NilaiController::class, 'inputNilai'])->name('nilai.input');
+    Route::post('nilai/store', [App\Http\Controllers\Guru\NilaiController::class, 'storeNilai'])->name('nilai.store');
+    Route::get('nilai/rekap/{kelas_id}', [App\Http\Controllers\Guru\NilaiController::class, 'rekap'])->name('nilai.rekap');
+    Route::get('nilai/export/{kelas_id}', [App\Http\Controllers\Guru\NilaiController::class, 'export'])->name('nilai.export');
+
+    // Absensi
+    Route::get('absensi', [App\Http\Controllers\Guru\AbsensiController::class, 'index'])->name('absensi.index');
+    Route::get('absensi/input/{jadwal_id}', [App\Http\Controllers\Guru\AbsensiController::class, 'inputAbsensi'])->name('absensi.input');
+    Route::post('absensi/store', [App\Http\Controllers\Guru\AbsensiController::class, 'storeAbsensi'])->name('absensi.store');
+
+    // Jadwal
+    Route::get('jadwal', [App\Http\Controllers\Guru\JadwalController::class, 'index'])->name('jadwal.index');
+
+});
+
+
+//siswa
+
+Route::middleware(['auth', 'role:siswa'])->prefix('siswa')->name('siswa.')->group(function () {
+
+    Route::get('/dashboard', [App\Http\Controllers\Siswa\DashboardController::class, 'index'])->name('dashboard');
+
+    Route::get('nilai', [App\Http\Controllers\Siswa\NilaiController::class, 'index'])->name('nilai.index');
+
+    Route::get('rapor', [App\Http\Controllers\Siswa\RaporController::class, 'index'])->name('rapor.index');
+    Route::get('rapor/print', [App\Http\Controllers\Siswa\RaporController::class, 'print'])->name('rapor.print');
+
+    Route::get('jadwal', [App\Http\Controllers\Siswa\JadwalController::class, 'index'])->name('jadwal.index');
+
+    Route::get('absensi', [App\Http\Controllers\Siswa\AbsensiController::class, 'index'])->name('absensi.index');
+
+    Route::get('pengumuman', [App\Http\Controllers\Siswa\DashboardController::class, 'pengumuman'])->name('pengumuman');
+
+    Route::get('profile', [App\Http\Controllers\Siswa\ProfileController::class, 'index'])->name('profile.index');
+    Route::get('profile/edit', [App\Http\Controllers\Siswa\ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('profile', [App\Http\Controllers\Siswa\ProfileController::class, 'update'])->name('profile.update');
+    Route::put('/profil/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
+    Route::post('profile/foto', [App\Http\Controllers\Siswa\ProfileController::class, 'updateFoto'])->name('profile.foto');
+    Route::delete('profile/foto', [App\Http\Controllers\Siswa\ProfileController::class, 'hapusFoto'])->name('profile.foto.hapus');
+});
+
+
+Route::get('/redirect', function () {
+    $role = Auth::user()->role;
+    return match ($role) {
+        'admin' => redirect()->route('admin.dashboard'),
+        'guru' => redirect()->route('guru.dashboard'),
+        'siswa' => redirect()->route('siswa.dashboard'),
+        default => redirect('/'),
+    };
+})->middleware('auth')->name('redirect');
+
+require __DIR__ . '/auth.php';
