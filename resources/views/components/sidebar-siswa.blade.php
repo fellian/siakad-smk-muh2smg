@@ -32,8 +32,8 @@
             <span>Presensi</span>
         </a>
 
-        <a href="siswa.pengumuman.index" class="flex items-center px-4 py-3 rounded-lg text-sm font-medium transition-colors text-gray-600 hover:bg-gray-50 hover:text-blue-800">
-            <i class="fas fa-bullhorn w-6 text-gray-400"></i>
+        <a href="{{ route('siswa.pengumuman.index') }}" class="flex items-center px-4 py-3 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('siswa.pengumuman.*') ? 'bg-blue-50 text-blue-800 border-l-4 border-blue-800' : 'text-gray-600 hover:bg-gray-50 hover:text-blue-800' }}">
+            <i class="fas fa-bullhorn w-6 {{ request()->routeIs('siswa.pengumuman.*') ? 'text-blue-800' : 'text-gray-400' }}"></i>
             <span>Pengumuman</span>
         </a>
         

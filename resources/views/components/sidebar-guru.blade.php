@@ -36,13 +36,13 @@
         
         <p class="px-4 pt-4 pb-2 text-[11px] font-bold text-gray-400 uppercase tracking-wider">Lainnya</p>
 
-        <a href="#" class="flex items-center px-4 py-3 rounded-lg text-sm font-medium transition-colors text-gray-600 hover:bg-gray-50 hover:text-blue-800">
-            <i class="fas fa-bullhorn w-6 text-gray-400"></i>
+        <a href="{{ route('guru.pengumuman.index') }}" class="flex items-center px-4 py-3 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('guru.pengumuman.*') ? 'bg-blue-50 text-blue-800 border-l-4 border-blue-800' : 'text-gray-600 hover:bg-gray-50 hover:text-blue-800' }}">
+            <i class="fas fa-bullhorn w-6 {{ request()->routeIs('guru.pengumuman.*') ? 'text-blue-800' : 'text-gray-400' }}"></i>
             <span>Pengumuman</span>
         </a>
         
-        <a href="{{ route('profile.edit') }}" class="flex items-center px-4 py-3 rounded-lg text-sm font-medium transition-colors text-gray-600 hover:bg-gray-50 hover:text-blue-800">
-            <i class="far fa-user w-6 text-gray-400"></i>
+        <a href="{{ route('guru.profile.index') }}" class="flex items-center px-4 py-3 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('guru.profile.*') ? 'bg-blue-50 text-blue-800 border-l-4 border-blue-800' : 'text-gray-600 hover:bg-gray-50 hover:text-blue-800' }}">
+            <i class="far fa-user w-6 {{ request()->routeIs('guru.profile.*') ? 'text-blue-800' : 'text-gray-400' }}"></i>
             <span>Profil</span>
         </a>
     </nav>

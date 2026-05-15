@@ -73,6 +73,15 @@ Route::middleware(['auth', 'role:guru'])->prefix('guru')->name('guru.')->group(f
     // Jadwal
     Route::get('jadwal', [App\Http\Controllers\Guru\JadwalController::class, 'index'])->name('jadwal.index');
 
+    // Pengumuman
+    Route::get('pengumuman', [App\Http\Controllers\Guru\PengumumanController::class, 'index'])->name('pengumuman.index');
+    Route::get('pengumuman/{pengumuman}', [App\Http\Controllers\Guru\PengumumanController::class, 'show'])->name('pengumuman.show');
+
+    // Profil
+    Route::get('profile', [App\Http\Controllers\Guru\ProfileController::class, 'index'])->name('profile.index');
+    Route::patch('profile', [App\Http\Controllers\Guru\ProfileController::class, 'update'])->name('profile.update');
+    Route::put('profile/password', [App\Http\Controllers\Guru\ProfileController::class, 'updatePassword'])->name('profile.password');
+
 });
 
 
@@ -91,7 +100,8 @@ Route::middleware(['auth', 'role:siswa'])->prefix('siswa')->name('siswa.')->grou
 
     Route::get('absensi', [App\Http\Controllers\Siswa\AbsensiController::class, 'index'])->name('absensi.index');
 
-    Route::get('pengumuman', [App\Http\Controllers\Siswa\DashboardController::class, 'pengumuman'])->name('pengumuman');
+    Route::get('pengumuman', [App\Http\Controllers\Siswa\PengumumanController::class, 'index'])->name('pengumuman.index');
+    Route::get('pengumuman/{pengumuman}', [App\Http\Controllers\Siswa\PengumumanController::class, 'show'])->name('pengumuman.show');
 
     Route::get('profile', [App\Http\Controllers\Siswa\ProfileController::class, 'index'])->name('profile.index');
     Route::get('profile/edit', [App\Http\Controllers\Siswa\ProfileController::class, 'edit'])->name('profile.edit');

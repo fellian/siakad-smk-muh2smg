@@ -162,4 +162,20 @@
 
 </div>
 
+<!-- Pengumuman Sekolah -->
+<div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mt-8">
+    <div class="flex justify-between items-center mb-6">
+        <h3 class="text-xl font-bold text-gray-800">Pengumuman Sekolah</h3>
+        <a href="{{ route('guru.pengumuman.index') }}" class="text-sm font-semibold text-blue-600 hover:text-blue-800 flex items-center">
+            Lihat Semua <i class="fas fa-arrow-right ml-1 text-xs"></i>
+        </a>
+    </div>
+
+    <x-pengumuman-list
+        :pengumumans="$pengumumans"
+        show-route="guru.pengumuman.show"
+        empty-message="Belum ada pengumuman untuk ditampilkan."
+    />
+</div>
+
 @endsection

@@ -31,15 +31,7 @@ class DashboardController extends Controller
             ->orderBy('jam_mulai')
             ->get();
 
-        // Pengumuman untuk guru
-        $pengumumans = \App\Models\Pengumuman::whereIn('target', ['semua', 'guru'])
-            ->where('tanggal_mulai', '<=', now())
-            ->where(function ($q) {
-                $q->whereNull('tanggal_selesai')->orWhere('tanggal_selesai', '>=', now());
-            })
-            ->latest()
-            ->take(5)
-            ->get();
+        $pengumumans = \App\Models\Pengumuman::forRole('guru')->aktif()->latest()->take(5)->get();
 
         return view('guru.dashboard', compact(
             'guru',

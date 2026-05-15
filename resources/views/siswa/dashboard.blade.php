@@ -164,7 +164,7 @@
 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
     <div class="flex justify-between items-center mb-6">
         <h3 class="text-xl font-bold text-gray-800">Pengumuman Sekolah</h3>
-        <a href="#" class="text-sm font-semibold text-blue-600 hover:text-blue-800 flex items-center">
+        <a href="{{ route('siswa.pengumuman.index') }}" class="text-sm font-semibold text-blue-600 hover:text-blue-800 flex items-center">
             Lihat Semua <i class="fas fa-arrow-right ml-1 text-xs"></i>
         </a>
     </div>

@@ -33,4 +33,47 @@ class Pengumuman extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function scopeAktif($query)
+    {
+        return $query->where('tanggal_mulai', '<=', now())
+            ->where(function ($q) {
+                $q->whereNull('tanggal_selesai')
+                    ->orWhere('tanggal_selesai', '>=', now());
+            });
+    }
+
+    public function scopeForRole($query, string $role)
+    {
+        $targets = match ($role) {
+            'siswa' => ['semua', 'siswa'],
+            'guru' => ['semua', 'guru'],
+            default => ['semua'],
+        };
+
+        return $query->whereIn('target', $targets);
+    }
+
+    public function isVisibleForRole(string $role): bool
+    {
+        $targets = match ($role) {
+            'siswa' => ['semua', 'siswa'],
+            'guru' => ['semua', 'guru'],
+            default => ['semua'],
+        };
+
+        if (! in_array($this->target, $targets)) {
+            return false;
+        }
+
+        if ($this->tanggal_mulai->isFuture()) {
+            return false;
+        }
+
+        if ($this->tanggal_selesai && $this->tanggal_selesai->isPast()) {
+            return false;
+        }
+
+        return true;
+    }
 }

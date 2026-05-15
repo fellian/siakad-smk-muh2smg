@@ -32,15 +32,7 @@ class DashboardController extends Controller
             ->orderBy('jam_mulai')
             ->get() ?? collect();
 
-        // Pengumuman untuk siswa
-        $pengumumans = Pengumuman::whereIn('target', ['semua', 'siswa'])
-            ->where('tanggal_mulai', '<=', now())
-            ->where(function ($q) {
-                $q->whereNull('tanggal_selesai')->orWhere('tanggal_selesai', '>=', now());
-            })
-            ->latest()
-            ->take(5)
-            ->get();
+        $pengumumans = Pengumuman::forRole('siswa')->aktif()->latest()->take(5)->get();
 
         return view('siswa.dashboard', compact(
             'siswa',
@@ -54,16 +46,4 @@ class DashboardController extends Controller
         ));
     }
 
-    public function pengumuman()
-    {
-        $pengumumans = Pengumuman::whereIn('target', ['semua', 'siswa'])
-            ->where('tanggal_mulai', '<=', now())
-            ->where(function ($q) {
-                $q->whereNull('tanggal_selesai')->orWhere('tanggal_selesai', '>=', now());
-            })
-            ->latest()
-            ->paginate(10);
-
-        return view('siswa.pengumuman', compact('pengumumans'));
-    }
 }
