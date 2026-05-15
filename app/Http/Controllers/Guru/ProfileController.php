@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 
 class ProfileController extends Controller
@@ -23,14 +24,26 @@ class ProfileController extends Controller
     {
         /** @var \App\Models\Guru $guru */
         $guru = Auth::user()->guru;
+        $user = Auth::user();
 
-        $request->validate([
-            'no_hp' => 'nullable|string|max:15',
-            'alamat' => 'nullable|string',
-            'foto' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        $validated = $request->validate([
+            'nip' => ['nullable', 'string', 'max:20', Rule::unique('gurus', 'nip')->ignore($guru->id)],
+            'nuptk' => ['nullable', 'string', 'max:20', Rule::unique('gurus', 'nuptk')->ignore($guru->id)],
+            'nama_lengkap' => ['required', 'string', 'max:255'],
+            'jenis_kelamin' => ['required', 'in:L,P'],
+            'tempat_lahir' => ['nullable', 'string', 'max:255'],
+            'tanggal_lahir' => ['nullable', 'date'],
+            'alamat' => ['nullable', 'string'],
+            'no_hp' => ['nullable', 'string', 'max:15'],
+            'email' => ['required', 'email', 'max:255', Rule::unique('users', 'email')->ignore($user->id)],
+            'pendidikan_terakhir' => ['nullable', 'string', 'max:255'],
+            'jurusan_pendidikan' => ['nullable', 'string', 'max:255'],
+            'foto' => ['nullable', 'image', 'mimes:jpg,jpeg,png', 'max:2048'],
         ]);
 
-        $data = $request->only(['no_hp', 'alamat']);
+        $data = collect($validated)->except(['foto'])->toArray();
+        $data['nip'] = $data['nip'] ?: null;
+        $data['nuptk'] = $data['nuptk'] ?: null;
 
         if ($request->hasFile('foto')) {
             if ($guru->foto) {
@@ -42,7 +55,14 @@ class ProfileController extends Controller
 
         $guru->update($data);
 
-        return redirect()->back()->with('success', 'Profil berhasil diperbarui!');
+        $user->update([
+            'name' => $validated['nama_lengkap'],
+            'email' => $validated['email'],
+        ]);
+
+        return redirect()
+            ->route('guru.profile.index')
+            ->with('success', 'Profil berhasil diperbarui!');
     }
 
     public function updatePassword(Request $request)
@@ -56,6 +76,8 @@ class ProfileController extends Controller
             'password' => Hash::make($validated['password']),
         ]);
 
-        return redirect()->back()->with('success', 'Password berhasil diperbarui!');
+        return redirect()
+            ->route('guru.profile.index')
+            ->with('success', 'Password berhasil diperbarui!');
     }
 }
