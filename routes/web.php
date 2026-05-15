@@ -104,11 +104,8 @@ Route::middleware(['auth', 'role:siswa'])->prefix('siswa')->name('siswa.')->grou
     Route::get('pengumuman/{pengumuman}', [App\Http\Controllers\Siswa\PengumumanController::class, 'show'])->name('pengumuman.show');
 
     Route::get('profile', [App\Http\Controllers\Siswa\ProfileController::class, 'index'])->name('profile.index');
-    Route::get('profile/edit', [App\Http\Controllers\Siswa\ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('profile', [App\Http\Controllers\Siswa\ProfileController::class, 'update'])->name('profile.update');
-    Route::put('/profil/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
-    Route::post('profile/foto', [App\Http\Controllers\Siswa\ProfileController::class, 'updateFoto'])->name('profile.foto');
-    Route::delete('profile/foto', [App\Http\Controllers\Siswa\ProfileController::class, 'hapusFoto'])->name('profile.foto.hapus');
+    Route::put('profile/password', [App\Http\Controllers\Siswa\ProfileController::class, 'updatePassword'])->name('profile.password');
 });
 
 
