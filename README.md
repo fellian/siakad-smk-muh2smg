@@ -96,9 +96,10 @@ php artisan storage:link
 npm run build
 
 php artisan serve
+```
 
 ## 2. Cara Login
 
-Admin: admin@smkmuh2smg.sch.id / admin123
-Guru: guru@smkmuh2smg.sch.id / guru123
-Siswa: siswa@smkmuh2smg.sch.id / siswa123
+1. Admin: admin@smkmuh2smg.sch.id / admin123
+2. Guru: guru@smkmuh2smg.sch.id / guru123
+3. Siswa: siswa@smkmuh2smg.sch.id / siswa123
