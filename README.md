@@ -64,3 +64,35 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+# Cara Install Project
+
+## 1. Clone Repository
+
+```bash
+git clone https://github.com/fellian/siakad-smk-muh2smg.git
+
+cd siakad-smk-muh2smg
+
+composer install
+
+npm install
+
+copy .env.example .env
+
+php artisan key:generate
+
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=siakad_smk_muh2
+DB_USERNAME=root
+DB_PASSWORD=
+
+php artisan migrate
+
+php artisan storage:link
+
+npm run build
+
+php artisan serve
