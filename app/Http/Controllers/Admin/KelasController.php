@@ -25,23 +25,35 @@ class KelasController extends Controller
     {
         $jurusans = Jurusan::all();
         $gurus = Guru::where('status', 'aktif')->get();
-        $tahunAjarans = TahunAjaran::orderBy('tahun', 'desc')->get();
-        
-        return view('admin.kelas.create', compact('jurusans', 'gurus', 'tahunAjarans'));
+        $tahunAjaranAktif = TahunAjaran::active();
+
+        return view('admin.kelas.create', compact('jurusans', 'gurus', 'tahunAjaranAktif'));
     }
 
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'kode_kelas' => 'required|string|max:20|unique:kelas',
             'nama_kelas' => 'required|string|max:255',
             'jurusan_id' => 'required|exists:jurusans,id',
             'tingkat' => 'required|in:10,11,12',
             'wali_kelas_id' => 'nullable|exists:gurus,id',
-            'tahun_ajaran_id' => 'required|exists:tahun_ajarans,id',
         ]);
 
-        Kelas::create($request->all());
+        $tahunAjaran = TahunAjaran::active();
+
+        if (! $tahunAjaran) {
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('error', 'Tidak ada tahun ajaran aktif. Buka menu Tahun Ajaran dan aktifkan satu periode terlebih dahulu.');
+        }
+
+        Kelas::create([
+            ...$validated,
+            'wali_kelas_id' => $validated['wali_kelas_id'] ?: null,
+            'tahun_ajaran_id' => $tahunAjaran->id,
+        ]);
 
         return redirect()->route('admin.kelas.index')->with('success', 'Kelas berhasil ditambahkan!');
     }

@@ -38,6 +38,10 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     // Mapel
     Route::resource('mapel', App\Http\Controllers\Admin\MapelController::class);
 
+    // Tahun Ajaran
+    Route::resource('tahun-ajaran', App\Http\Controllers\Admin\TahunAjaranController::class);
+    Route::post('tahun-ajaran/{tahun_ajaran}/activate', [App\Http\Controllers\Admin\TahunAjaranController::class, 'activate'])->name('tahun-ajaran.activate');
+
     // Jadwal
     Route::resource('jadwal', App\Http\Controllers\Admin\JadwalController::class);
     Route::get('jadwal/check-bentrok', [App\Http\Controllers\Admin\JadwalController::class, 'checkBentrok'])->name('jadwal.check-bentrok');

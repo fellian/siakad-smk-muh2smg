@@ -45,6 +45,11 @@
         </a>
         
         <p class="px-4 pt-4 pb-2 text-[11px] font-bold text-gray-400 uppercase tracking-wider">Akademik</p>
+
+        <a href="{{ route('admin.tahun-ajaran.index') }}" class="flex items-center px-4 py-3 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('admin.tahun-ajaran.*') ? 'bg-blue-50 text-blue-800 border-l-4 border-blue-800' : 'text-gray-600 hover:bg-gray-50 hover:text-blue-800' }}">
+            <i class="fas fa-calendar-check w-6 {{ request()->routeIs('admin.tahun-ajaran.*') ? 'text-blue-800' : 'text-gray-400' }}"></i>
+            <span>Tahun Ajaran</span>
+        </a>
         
         <a href="{{ route('admin.jadwal.index') }}" class="flex items-center px-4 py-3 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('admin.jadwal.*') ? 'bg-blue-50 text-blue-800 border-l-4 border-blue-800' : 'text-gray-600 hover:bg-gray-50 hover:text-blue-800' }}">
             <i class="far fa-calendar-alt w-6 {{ request()->routeIs('admin.jadwal.*') ? 'text-blue-800' : 'text-gray-400' }}"></i>
