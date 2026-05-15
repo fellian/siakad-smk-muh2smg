@@ -1,7 +1,7 @@
 @extends('layouts.guru')
 
 @section('title', 'Jadwal Mengajar')
-@section('page-title', 'Jadwal Mengajar Saya')
+@section('page-title', 'Jadwal Mengajar')
 
 @section('content')
 <div class="bg-white rounded-lg shadow">
