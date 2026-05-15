@@ -36,6 +36,7 @@
         </div>
 
         <div class="flex justify-end gap-3">
+            <a href="{{ route('admin.jurusan.show', $jurusan) }}" class="px-4 py-2 border rounded-lg hover:bg-gray-50">Lihat Detail</a>
             <a href="{{ route('admin.jurusan.index') }}" class="px-4 py-2 border rounded-lg hover:bg-gray-50">Batal</a>
             <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Update</button>
         </div>

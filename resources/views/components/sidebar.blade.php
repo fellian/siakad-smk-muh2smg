@@ -31,7 +31,12 @@
         
         <a href="{{ route('admin.kelas.index') }}" class="flex items-center px-4 py-3 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('admin.kelas.*') ? 'bg-blue-50 text-blue-800 border-l-4 border-blue-800' : 'text-gray-600 hover:bg-gray-50 hover:text-blue-800' }}">
             <i class="fas fa-school w-6 {{ request()->routeIs('admin.kelas.*') ? 'text-blue-800' : 'text-gray-400' }}"></i>
-            <span>Kelas dan Jurusan</span>
+            <span>Data Kelas</span>
+        </a>
+
+        <a href="{{ route('admin.jurusan.index') }}" class="flex items-center px-4 py-3 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('admin.jurusan.*') ? 'bg-blue-50 text-blue-800 border-l-4 border-blue-800' : 'text-gray-600 hover:bg-gray-50 hover:text-blue-800' }}">
+            <i class="fas fa-layer-group w-6 {{ request()->routeIs('admin.jurusan.*') ? 'text-blue-800' : 'text-gray-400' }}"></i>
+            <span>Data Jurusan</span>
         </a>
         
         <a href="{{ route('admin.mapel.index') }}" class="flex items-center px-4 py-3 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('admin.mapel.*') ? 'bg-blue-50 text-blue-800 border-l-4 border-blue-800' : 'text-gray-600 hover:bg-gray-50 hover:text-blue-800' }}">

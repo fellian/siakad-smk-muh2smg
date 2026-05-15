@@ -8,9 +8,21 @@ use Illuminate\Http\Request;
 
 class JurusanController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $jurusans = Jurusan::latest()->paginate(10);
+        $query = Jurusan::withCount(['kelas', 'mataPelajarans']);
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('kode_jurusan', 'like', "%{$search}%")
+                    ->orWhere('nama_jurusan', 'like', "%{$search}%")
+                    ->orWhere('keterangan', 'like', "%{$search}%");
+            });
+        }
+
+        $jurusans = $query->latest()->paginate(10)->withQueryString();
+
         return view('admin.jurusan.index', compact('jurusans'));
     }
 
@@ -21,15 +33,25 @@ class JurusanController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'kode_jurusan' => 'required|string|max:10|unique:jurusans',
             'nama_jurusan' => 'required|string|max:255',
             'keterangan' => 'nullable|string',
         ]);
 
-        Jurusan::create($request->all());
+        Jurusan::create($validated);
 
         return redirect()->route('admin.jurusan.index')->with('success', 'Jurusan berhasil ditambahkan!');
+    }
+
+    public function show(Jurusan $jurusan)
+    {
+        $jurusan->load([
+            'kelas' => fn ($q) => $q->withCount('siswas')->orderBy('tingkat')->orderBy('nama_kelas'),
+            'mataPelajarans' => fn ($q) => $q->orderBy('nama_mapel'),
+        ]);
+
+        return view('admin.jurusan.show', compact('jurusan'));
     }
 
     public function edit(Jurusan $jurusan)
@@ -39,26 +61,26 @@ class JurusanController extends Controller
 
     public function update(Request $request, Jurusan $jurusan)
     {
-        $request->validate([
+        $validated = $request->validate([
             'kode_jurusan' => 'required|string|max:10|unique:jurusans,kode_jurusan,' . $jurusan->id,
             'nama_jurusan' => 'required|string|max:255',
             'keterangan' => 'nullable|string',
         ]);
 
-        $jurusan->update($request->all());
+        $jurusan->update($validated);
 
         return redirect()->route('admin.jurusan.index')->with('success', 'Jurusan berhasil diperbarui!');
     }
 
     public function destroy(Jurusan $jurusan)
     {
-        // Cek apakah jurusan masih digunakan
-        if ($jurusan->kelas()->count() > 0 || $jurusan->mataPelajarans()->count() > 0) {
+        if ($jurusan->kelas()->exists() || $jurusan->mataPelajarans()->exists()) {
             return redirect()->route('admin.jurusan.index')
                 ->with('error', 'Jurusan tidak bisa dihapus karena masih digunakan di kelas atau mata pelajaran!');
         }
 
         $jurusan->delete();
+
         return redirect()->route('admin.jurusan.index')->with('success', 'Jurusan berhasil dihapus!');
     }
 }

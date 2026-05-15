@@ -49,7 +49,7 @@
                 <select name="jurusan_id" class="w-full border rounded-lg px-4 py-2">
                     <option value="">Umum (Semua Jurusan)</option>
                     @foreach($jurusans as $jurusan)
-                        <option value="{{ $jurusan->id }}" {{ old('jurusan_id') == $jurusan->id ? 'selected' : '' }}>
+                        <option value="{{ $jurusan->id }}" {{ old('jurusan_id', request('jurusan_id')) == $jurusan->id ? 'selected' : '' }}>
                             {{ $jurusan->nama_jurusan }}
                         </option>
                     @endforeach

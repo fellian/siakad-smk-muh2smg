@@ -7,9 +7,14 @@
 <div class="mb-6">
     <div class="flex justify-between items-center mb-4">
         <h3 class="text-lg font-semibold">Daftar Kelas</h3>
-        <a href="{{ route('admin.kelas.create') }}" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
-            <i class="fas fa-plus mr-2"></i>Tambah Kelas
-        </a>
+        <div class="flex gap-2">
+            <a href="{{ route('admin.jurusan.index') }}" class="px-4 py-2 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50">
+                <i class="fas fa-layer-group mr-2"></i>Kelola Jurusan
+            </a>
+            <a href="{{ route('admin.kelas.create') }}" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                <i class="fas fa-plus mr-2"></i>Tambah Kelas
+            </a>
+        </div>
     </div>
 
     <!-- Ringkasan -->
