@@ -89,7 +89,7 @@ DB_PASSWORD=
 
 php artisan key:generate
 
-php artisan migrate
+php artisan migrate --seed
 
 php artisan storage:link
 
