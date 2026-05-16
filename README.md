@@ -80,8 +80,6 @@ npm install
 
 copy .env.example .env
 
-php artisan key:generate
-
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
 DB_PORT=3306
@@ -89,7 +87,9 @@ DB_DATABASE=siakad_smk_muh2
 DB_USERNAME=root
 DB_PASSWORD=
 
-php artisan migrate
+php artisan key:generate
+
+php artisan migrate --seed
 
 php artisan storage:link
 
