@@ -23,13 +23,15 @@ class RaporController extends Controller
         // Hitung rata-rata
         $rataRata = $nilais->avg('nilai_akhir');
 
-        // Hitung absensi
-        $totalAbsensi = $siswa->absensis()->count();
+        $absensiBase = fn () => $siswa->absensis()->when($tahunAjaran?->id, fn ($q) => $q->whereHas('jadwal', fn ($jq) => $jq->where('tahun_ajaran_id', $tahunAjaran->id)));
+
+        $totalAbsensi = $absensiBase()->count();
         $absensiData = [
-            'hadir' => $siswa->absensis()->where('status', 'hadir')->count(),
-            'izin' => $siswa->absensis()->where('status', 'izin')->count(),
-            'sakit' => $siswa->absensis()->where('status', 'sakit')->count(),
-            'alpha' => $siswa->absensis()->where('status', 'alpha')->count(),
+            'hadir' => $absensiBase()->where('status', 'hadir')->count(),
+            'terlambat' => $absensiBase()->where('status', 'terlambat')->count(),
+            'izin' => $absensiBase()->where('status', 'izin')->count(),
+            'sakit' => $absensiBase()->where('status', 'sakit')->count(),
+            'alfa' => $absensiBase()->where('status', 'alfa')->count(),
         ];
 
         return view('siswa.rapor.index', compact(
@@ -50,11 +52,14 @@ class RaporController extends Controller
 
         $rataRata = $nilais->avg('nilai_akhir');
 
+        $absensiBase = fn () => $siswa->absensis()->when($tahunAjaran?->id, fn ($q) => $q->whereHas('jadwal', fn ($jq) => $jq->where('tahun_ajaran_id', $tahunAjaran->id)));
+
         $absensiData = [
-            'hadir' => $siswa->absensis()->where('status', 'hadir')->count(),
-            'izin' => $siswa->absensis()->where('status', 'izin')->count(),
-            'sakit' => $siswa->absensis()->where('status', 'sakit')->count(),
-            'alpha' => $siswa->absensis()->where('status', 'alpha')->count(),
+            'hadir' => $absensiBase()->where('status', 'hadir')->count(),
+            'terlambat' => $absensiBase()->where('status', 'terlambat')->count(),
+            'izin' => $absensiBase()->where('status', 'izin')->count(),
+            'sakit' => $absensiBase()->where('status', 'sakit')->count(),
+            'alfa' => $absensiBase()->where('status', 'alfa')->count(),
         ];
 
         $pdf = Pdf::loadView('siswa.rapor.print', compact(

@@ -53,4 +53,9 @@ class Jadwal extends Model
     {
         return $this->hasMany(Absensi::class);
     }
+
+    public function presensiSesis(): HasMany
+    {
+        return $this->hasMany(PresensiSesi::class);
+    }
 }

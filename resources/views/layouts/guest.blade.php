@@ -5,7 +5,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'SIAKAD SMK Muh 2') }}</title>
+        <title>@yield('title', 'Login') | SIAKAD SMK Muhammadiyah 2 Semarang</title>
+        <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
+        <link rel="shortcut icon" type="image/png" href="{{ asset('favicon.png') }}">
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">

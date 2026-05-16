@@ -19,12 +19,15 @@ class Absensi extends Model
         'status',
         'keterangan',
         'guru_id',
+        'presensi_sesi_id',
+        'waktu_presensi',
     ];
 
     protected $casts = [
         'tanggal' => 'date',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
+        'waktu_presensi' => 'datetime',
     ];
 
     // Relasi ke Siswa
@@ -43,5 +46,10 @@ class Absensi extends Model
     public function guru(): BelongsTo
     {
         return $this->belongsTo(Guru::class);
+    }
+
+    public function presensiSesi(): BelongsTo
+    {
+        return $this->belongsTo(PresensiSesi::class);
     }
 }

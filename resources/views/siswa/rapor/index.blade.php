@@ -88,9 +88,10 @@
                 <h5 class="font-semibold mb-3">Kehadiran</h5>
                 <div class="space-y-2 text-sm">
                     <div class="flex justify-between"><span>Hadir</span><span class="font-medium">{{ $absensiData['hadir'] }}</span></div>
+                    <div class="flex justify-between"><span>Terlambat</span><span class="font-medium">{{ $absensiData['terlambat'] }}</span></div>
                     <div class="flex justify-between"><span>Izin</span><span class="font-medium">{{ $absensiData['izin'] }}</span></div>
                     <div class="flex justify-between"><span>Sakit</span><span class="font-medium">{{ $absensiData['sakit'] }}</span></div>
-                    <div class="flex justify-between"><span>Alpha</span><span class="font-medium">{{ $absensiData['alpha'] }}</span></div>
+                    <div class="flex justify-between"><span>Alfa</span><span class="font-medium">{{ $absensiData['alfa'] }}</span></div>
                 </div>
             </div>
             <div class="border rounded-lg p-4">

@@ -3,10 +3,11 @@
 namespace App\Http\Controllers\Guru;
 
 use App\Http\Controllers\Controller;
-use App\Models\Guru;
-use App\Models\Jadwal;
 use App\Models\Nilai;
+use App\Models\PresensiSesi;
+use App\Models\Siswa;
 use App\Models\TahunAjaran;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
@@ -23,13 +24,27 @@ class DashboardController extends Controller
         $totalNilaiInput = Nilai::where('guru_id', $guru->id)->where('tahun_ajaran_id', $tahunAjaran?->id)->count();
 
         // Jadwal hari ini
-        $hariIni = now()->locale('id')->dayName;
+        $hariIni = ucfirst(now()->locale('id')->dayName);
         $jadwalHariIni = $guru->jadwals()
             ->with(['kelas', 'mataPelajaran'])
-            ->where('hari', ucfirst($hariIni))
-            ->where('tahun_ajaran_id', $tahunAjaran?->id)
+            ->where('hari', $hariIni)
+            ->when($tahunAjaran, fn ($q) => $q->where('tahun_ajaran_id', $tahunAjaran->id))
             ->orderBy('jam_mulai')
             ->get();
+
+        $sesiAktifHariIni = PresensiSesi::query()
+            ->whereNull('ditutup_at')
+            ->whereDate('tanggal', Carbon::today())
+            ->where('guru_id', $guru->id)
+            ->whereIn('jadwal_id', $jadwalHariIni->pluck('id'))
+            ->get()
+            ->keyBy('jadwal_id');
+
+        // Perkiraan total siswa unik dalam kelas yang diajar hari ini
+        $kelasIdsHariIni = $jadwalHariIni->pluck('kelas_id')->unique()->filter();
+        $totalSiswaHariIni = $kelasIdsHariIni->isEmpty()
+            ? 0
+            : Siswa::query()->whereIn('kelas_id', $kelasIdsHariIni)->where('status', 'aktif')->count();
 
         $pengumumans = \App\Models\Pengumuman::forRole('guru')->aktif()->latest()->take(5)->get();
 
@@ -42,6 +57,8 @@ class DashboardController extends Controller
             'totalNilaiInput',
             'jadwalHariIni',
             'hariIni',
+            'sesiAktifHariIni',
+            'totalSiswaHariIni',
             'pengumumans'
         ));
     }

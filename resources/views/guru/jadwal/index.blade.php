@@ -36,8 +36,8 @@
                                 <td class="px-4 py-3">{{ $jadwal->mataPelajaran->nama_mapel }}</td>
                                 <td class="px-4 py-3">{{ $jadwal->ruangan ?? '-' }}</td>
                                 <td class="px-4 py-3 text-center">
-                                    <a href="{{ route('guru.absensi.input', $jadwal->id) }}" class="px-3 py-1 bg-green-100 text-green-700 rounded text-xs hover:bg-green-200 mr-1">
-                                        <i class="fas fa-clipboard-check mr-1"></i>Absen
+                                    <a href="{{ route('guru.absensi.index') }}" class="px-3 py-1 bg-green-100 text-green-700 rounded text-xs hover:bg-green-200 mr-1">
+                                        <i class="fas fa-clipboard-check mr-1"></i>Presensi
                                     </a>
                                     <a href="{{ route('guru.nilai.input', ['kelas_id' => $jadwal->kelas_id, 'mapel_id' => $jadwal->mata_pelajaran_id]) }}" class="px-3 py-1 bg-blue-100 text-blue-700 rounded text-xs hover:bg-blue-200">
                                         <i class="fas fa-pen mr-1"></i>Nilai

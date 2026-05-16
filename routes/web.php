@@ -32,7 +32,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::resource('guru', App\Http\Controllers\Admin\GuruController::class);
 
     // Kelas & Jurusan
-    Route::resource('kelas', App\Http\Controllers\Admin\KelasController::class);
+    Route::resource('kelas', App\Http\Controllers\Admin\KelasController::class)->parameters(['kelas' => 'kelas']);
     Route::resource('jurusan', App\Http\Controllers\Admin\JurusanController::class);
 
     // Mapel
@@ -69,10 +69,13 @@ Route::middleware(['auth', 'role:guru'])->prefix('guru')->name('guru.')->group(f
     Route::get('nilai/rekap/{kelas_id}', [App\Http\Controllers\Guru\NilaiController::class, 'rekap'])->name('nilai.rekap');
     Route::get('nilai/export/{kelas_id}', [App\Http\Controllers\Guru\NilaiController::class, 'export'])->name('nilai.export');
 
-    // Absensi
+    // Presensi (sesi jam pelajaran)
     Route::get('absensi', [App\Http\Controllers\Guru\AbsensiController::class, 'index'])->name('absensi.index');
-    Route::get('absensi/input/{jadwal_id}', [App\Http\Controllers\Guru\AbsensiController::class, 'inputAbsensi'])->name('absensi.input');
-    Route::post('absensi/store', [App\Http\Controllers\Guru\AbsensiController::class, 'storeAbsensi'])->name('absensi.store');
+    Route::get('absensi/rekap', [App\Http\Controllers\Guru\AbsensiController::class, 'rekap'])->name('absensi.rekap');
+    Route::post('absensi/jadwal/{jadwal}/mulai', [App\Http\Controllers\Guru\AbsensiController::class, 'mulaiSesi'])->name('absensi.sesi.mulai');
+    Route::get('absensi/sesi/{presensi_sesi}', [App\Http\Controllers\Guru\AbsensiController::class, 'showSesi'])->name('absensi.sesi.show');
+    Route::post('absensi/sesi/{presensi_sesi}/tutup', [App\Http\Controllers\Guru\AbsensiController::class, 'tutupSesi'])->name('absensi.sesi.tutup');
+    Route::post('absensi/sesi/{presensi_sesi}/siswa', [App\Http\Controllers\Guru\AbsensiController::class, 'upsertAbsensiSiswa'])->name('absensi.sesi.siswa');
 
     // Jadwal
     Route::get('jadwal', [App\Http\Controllers\Guru\JadwalController::class, 'index'])->name('jadwal.index');
@@ -85,7 +88,6 @@ Route::middleware(['auth', 'role:guru'])->prefix('guru')->name('guru.')->group(f
     Route::get('profile', [App\Http\Controllers\Guru\ProfileController::class, 'index'])->name('profile.index');
     Route::patch('profile', [App\Http\Controllers\Guru\ProfileController::class, 'update'])->name('profile.update');
     Route::put('profile/password', [App\Http\Controllers\Guru\ProfileController::class, 'updatePassword'])->name('profile.password');
-
 });
 
 
@@ -103,6 +105,7 @@ Route::middleware(['auth', 'role:siswa'])->prefix('siswa')->name('siswa.')->grou
     Route::get('jadwal', [App\Http\Controllers\Siswa\JadwalController::class, 'index'])->name('jadwal.index');
 
     Route::get('absensi', [App\Http\Controllers\Siswa\AbsensiController::class, 'index'])->name('absensi.index');
+    Route::post('absensi/presensi', [App\Http\Controllers\Siswa\AbsensiController::class, 'simpanPresensi'])->name('absensi.presensi.store');
 
     Route::get('pengumuman', [App\Http\Controllers\Siswa\PengumumanController::class, 'index'])->name('pengumuman.index');
     Route::get('pengumuman/{pengumuman}', [App\Http\Controllers\Siswa\PengumumanController::class, 'show'])->name('pengumuman.show');
@@ -122,5 +125,3 @@ Route::get('/redirect', function () {
         default => redirect('/'),
     };
 })->middleware('auth')->name('redirect');
-
-require __DIR__ . '/auth.php';

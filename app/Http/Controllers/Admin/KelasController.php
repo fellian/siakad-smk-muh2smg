@@ -17,7 +17,7 @@ class KelasController extends Controller
             ->orderBy('tingkat')
             ->orderBy('nama_kelas')
             ->get();
-            
+
         return view('admin.kelas.index', compact('kelas'));
     }
 
@@ -58,9 +58,17 @@ class KelasController extends Controller
         return redirect()->route('admin.kelas.index')->with('success', 'Kelas berhasil ditambahkan!');
     }
 
-    public function show(Kelas $kelas)
+    public function show($id)
     {
-        $kelas->load(['jurusan', 'waliKelas', 'tahunAjaran', 'siswas.user', 'jadwals']);
+        $kelas = Kelas::with([
+            'jurusan',
+            'waliKelas',
+            'tahunAjaran',
+            'siswas',
+            'jadwals.mataPelajaran',
+            'jadwals.guru'
+        ])->findOrFail($id);
+
         return view('admin.kelas.show', compact('kelas'));
     }
 
@@ -69,7 +77,7 @@ class KelasController extends Controller
         $jurusans = Jurusan::all();
         $gurus = Guru::where('status', 'aktif')->get();
         $tahunAjarans = TahunAjaran::orderBy('tahun', 'desc')->get();
-        
+
         return view('admin.kelas.edit', compact('kelas', 'jurusans', 'gurus', 'tahunAjarans'));
     }
 

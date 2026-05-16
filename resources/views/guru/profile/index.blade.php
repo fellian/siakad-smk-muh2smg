@@ -1,36 +1,51 @@
 @extends('layouts.guru')
 
-@section('title', 'Profil Saya')
+@section('title', 'Profil')
 @section('page-title', 'Profil Guru')
 
 @section('content')
-<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
+    
+    <!-- Sidebar Profil -->
     <div class="lg:col-span-1">
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-            <div class="bg-gradient-to-r from-blue-800 to-blue-900 h-32"></div>
-            <div class="px-6 pb-6 relative text-center">
-                <div class="absolute -top-16 left-1/2 -translate-x-1/2">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            
+            <div class="bg-gradient-to-br from-blue-800 to-blue-900 h-28 relative">
+                <div class="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-black/10 to-transparent"></div>
+            </div>
+            
+            
+            <div class="px-6 pb-6 text-center relative">
+                
+                <div class="absolute -top-12 left-1/2 -translate-x-1/2">
                     @if($guru->foto)
                         <img
                             src="{{ asset('storage/' . $guru->foto) }}"
                             alt="Foto {{ $guru->nama_lengkap }}"
-                            class="w-32 h-32 rounded-full border-4 border-white object-cover shadow-lg"
+                            class="w-24 h-24 rounded-full border-4 border-white object-cover shadow-lg bg-white"
                             id="preview-foto"
                         >
                     @else
-                        <div class="w-32 h-32 rounded-full border-4 border-white bg-blue-100 flex items-center justify-center text-blue-800 text-4xl shadow-lg" id="preview-foto-placeholder">
-                            <i class="fas fa-chalkboard-teacher"></i>
+                        <div class="w-24 h-24 rounded-full border-4 border-white bg-blue-50 flex items-center justify-center shadow-lg" id="preview-foto-placeholder">
+                            <svg class="w-10 h-10 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 14l9-5-9-5-9 5 9 5z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"></path>
+                            </svg>
                         </div>
-                        <img src="" alt="" class="w-32 h-32 rounded-full border-4 border-white object-cover shadow-lg hidden" id="preview-foto">
+                        <img src="" alt="" class="w-24 h-24 rounded-full border-4 border-white object-cover shadow-lg hidden bg-white" id="preview-foto">
                     @endif
                 </div>
-                <div class="mt-20">
-                    <h3 class="text-xl font-bold text-gray-900">{{ $guru->nama_lengkap }}</h3>
-                    <p class="text-gray-500 text-sm mt-1">NIP: {{ $guru->nip ?? '-' }}</p>
-                    @if($guru->nuptk)
-                        <p class="text-gray-500 text-sm">NUPTK: {{ $guru->nuptk }}</p>
-                    @endif
-                    <span class="inline-block mt-3 px-3 py-1 rounded-full text-sm font-medium {{ $guru->status === 'aktif' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600' }}">
+                
+                <!-- Identitas - padding top agar tidak tertutup foto -->
+                <div class="pt-14">
+                    <h2 class="text-lg font-bold text-gray-900">{{ $guru->nama_lengkap }}</h2>
+                    <div class="mt-2 space-y-1">
+                        <p class="text-sm text-gray-500">NIP: {{ $guru->nip ?? '-' }}</p>
+                        @if($guru->nuptk)
+                            <p class="text-sm text-gray-500">NUPTK: {{ $guru->nuptk }}</p>
+                        @endif
+                    </div>
+                    <span class="inline-block mt-3 px-3 py-1 rounded-full text-xs font-medium {{ $guru->status === 'aktif' ? 'bg-green-100 text-green-700 border border-green-200' : 'bg-gray-100 text-gray-600 border border-gray-200' }}">
                         {{ ucfirst($guru->status) }}
                     </span>
                 </div>
@@ -38,173 +53,315 @@
         </div>
     </div>
 
-    <div class="lg:col-span-2 space-y-4">
-        <form action="{{ route('guru.profile.update') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
+    <!-- Main Content -->
+    <div class="lg:col-span-2 space-y-6">
+        
+        <!-- Foto Profil Upload -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <h4 class="text-base font-semibold text-gray-900 mb-4 flex items-center">
+                <svg class="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+                Foto Profil
+            </h4>
+            <div>
+                <label for="guru-foto" class="block text-sm text-gray-600 mb-2">Unggah foto baru (JPG/PNG, maks. 2MB)</label>
+                <input
+                    type="file"
+                    name="foto"
+                    id="guru-foto"
+                    accept="image/*"
+                    class="block w-full text-sm text-gray-600 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 file:transition-colors cursor-pointer"
+                    onchange="previewImage(this)"
+                >
+                @error('foto')
+                    <p class="text-red-500 text-sm mt-2 flex items-center">
+                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        {{ $message }}
+                    </p>
+                @enderror
+            </div>
+        </div>
+
+        <!-- Data Pribadi -->
+        <form action="{{ route('guru.profile.update') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
             @csrf
             @method('PATCH')
 
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                <h4 class="font-semibold text-gray-900 mb-4 pb-2 border-b border-gray-100">Foto Profil</h4>
-                <div>
-                    <label for="guru-foto" class="block text-sm text-gray-600 mb-2">Unggah foto (JPG/PNG, maks. 2MB)</label>
-                    <input
-                        type="file"
-                        name="foto"
-                        id="guru-foto"
-                        accept="image/*"
-                        class="w-full text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-                        onchange="previewImage(this)"
-                    >
-                    @error('foto')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
-            </div>
-
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                <h4 class="font-semibold text-gray-900 mb-4 pb-2 border-b border-gray-100">Data Pribadi</h4>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <h4 class="text-base font-semibold text-gray-900 mb-5 flex items-center pb-3 border-b border-gray-100">
+                    <svg class="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                    </svg>
+                    Data Pribadi
+                </h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div>
-                        <label for="nama_lengkap" class="block text-gray-500 mb-1">Nama Lengkap <span class="text-red-500">*</span></label>
+                        <label for="nama_lengkap" class="block text-sm font-medium text-gray-700 mb-1.5">
+                            Nama Lengkap <span class="text-red-500">*</span>
+                        </label>
                         <input type="text" name="nama_lengkap" id="nama_lengkap" value="{{ old('nama_lengkap', $guru->nama_lengkap) }}" required
-                            class="w-full border border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-200 focus:border-blue-400">
-                        @error('nama_lengkap')<p class="text-red-500 text-sm mt-1">{{ $message }}</p>@enderror
+                            class="w-full border border-gray-300 rounded-lg px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-colors">
+                        @error('nama_lengkap')
+                            <p class="text-red-500 text-sm mt-1.5 flex items-center">
+                                <svg class="w-4 h-4 mr-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                {{ $message }}
+                            </p>
+                        @enderror
                     </div>
                     <div>
-                        <label for="nip" class="block text-gray-500 mb-1">NIP</label>
+                        <label for="nip" class="block text-sm font-medium text-gray-700 mb-1.5">NIP</label>
                         <input type="text" name="nip" id="nip" value="{{ old('nip', $guru->nip) }}"
-                            class="w-full border border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-200 focus:border-blue-400">
-                        @error('nip')<p class="text-red-500 text-sm mt-1">{{ $message }}</p>@enderror
+                            class="w-full border border-gray-300 rounded-lg px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-colors">
+                        @error('nip')
+                            <p class="text-red-500 text-sm mt-1.5 flex items-center">
+                                <svg class="w-4 h-4 mr-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                {{ $message }}
+                            </p>
+                        @enderror
                     </div>
                     <div>
-                        <label for="nuptk" class="block text-gray-500 mb-1">NUPTK</label>
+                        <label for="nuptk" class="block text-sm font-medium text-gray-700 mb-1.5">NUPTK</label>
                         <input type="text" name="nuptk" id="nuptk" value="{{ old('nuptk', $guru->nuptk) }}"
-                            class="w-full border border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-200 focus:border-blue-400">
-                        @error('nuptk')<p class="text-red-500 text-sm mt-1">{{ $message }}</p>@enderror
+                            class="w-full border border-gray-300 rounded-lg px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-colors">
+                        @error('nuptk')
+                            <p class="text-red-500 text-sm mt-1.5 flex items-center">
+                                <svg class="w-4 h-4 mr-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                {{ $message }}
+                            </p>
+                        @enderror
                     </div>
                     <div>
-                        <label for="jenis_kelamin" class="block text-gray-500 mb-1">Jenis Kelamin <span class="text-red-500">*</span></label>
+                        <label for="jenis_kelamin" class="block text-sm font-medium text-gray-700 mb-1.5">
+                            Jenis Kelamin <span class="text-red-500">*</span>
+                        </label>
                         <select name="jenis_kelamin" id="jenis_kelamin" required
-                            class="w-full border border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-200 focus:border-blue-400">
+                            class="w-full border border-gray-300 rounded-lg px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-colors bg-white">
                             <option value="L" {{ old('jenis_kelamin', $guru->jenis_kelamin) === 'L' ? 'selected' : '' }}>Laki-laki</option>
                             <option value="P" {{ old('jenis_kelamin', $guru->jenis_kelamin) === 'P' ? 'selected' : '' }}>Perempuan</option>
                         </select>
-                        @error('jenis_kelamin')<p class="text-red-500 text-sm mt-1">{{ $message }}</p>@enderror
+                        @error('jenis_kelamin')
+                            <p class="text-red-500 text-sm mt-1.5 flex items-center">
+                                <svg class="w-4 h-4 mr-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                {{ $message }}
+                            </p>
+                        @enderror
                     </div>
                     <div>
-                        <label for="tempat_lahir" class="block text-gray-500 mb-1">Tempat Lahir</label>
+                        <label for="tempat_lahir" class="block text-sm font-medium text-gray-700 mb-1.5">Tempat Lahir</label>
                         <input type="text" name="tempat_lahir" id="tempat_lahir" value="{{ old('tempat_lahir', $guru->tempat_lahir) }}"
-                            class="w-full border border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-200 focus:border-blue-400">
-                        @error('tempat_lahir')<p class="text-red-500 text-sm mt-1">{{ $message }}</p>@enderror
+                            class="w-full border border-gray-300 rounded-lg px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-colors">
+                        @error('tempat_lahir')
+                            <p class="text-red-500 text-sm mt-1.5 flex items-center">
+                                <svg class="w-4 h-4 mr-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                {{ $message }}
+                            </p>
+                        @enderror
                     </div>
                     <div>
-                        <label for="tanggal_lahir" class="block text-gray-500 mb-1">Tanggal Lahir</label>
+                        <label for="tanggal_lahir" class="block text-sm font-medium text-gray-700 mb-1.5">Tanggal Lahir</label>
                         <input type="date" name="tanggal_lahir" id="tanggal_lahir"
                             value="{{ old('tanggal_lahir', $guru->tanggal_lahir?->format('Y-m-d')) }}"
-                            class="w-full border border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-200 focus:border-blue-400">
-                        @error('tanggal_lahir')<p class="text-red-500 text-sm mt-1">{{ $message }}</p>@enderror
+                            class="w-full border border-gray-300 rounded-lg px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-colors">
+                        @error('tanggal_lahir')
+                            <p class="text-red-500 text-sm mt-1.5 flex items-center">
+                                <svg class="w-4 h-4 mr-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                {{ $message }}
+                            </p>
+                        @enderror
                     </div>
                     <div class="md:col-span-2">
-                        <label for="alamat" class="block text-gray-500 mb-1">Alamat</label>
-                        <textarea name="alamat" id="alamat" rows="2"
-                            class="w-full border border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-200 focus:border-blue-400">{{ old('alamat', $guru->alamat) }}</textarea>
-                        @error('alamat')<p class="text-red-500 text-sm mt-1">{{ $message }}</p>@enderror
+                        <label for="alamat" class="block text-sm font-medium text-gray-700 mb-1.5">Alamat</label>
+                        <textarea name="alamat" id="alamat" rows="3"
+                            class="w-full border border-gray-300 rounded-lg px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-colors resize-none">{{ old('alamat', $guru->alamat) }}</textarea>
+                        @error('alamat')
+                            <p class="text-red-500 text-sm mt-1.5 flex items-center">
+                                <svg class="w-4 h-4 mr-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                {{ $message }}
+                            </p>
+                        @enderror
                     </div>
                     <div>
-                        <label for="no_hp" class="block text-gray-500 mb-1">No HP</label>
+                        <label for="no_hp" class="block text-sm font-medium text-gray-700 mb-1.5">No HP</label>
                         <input type="text" name="no_hp" id="no_hp" value="{{ old('no_hp', $guru->no_hp) }}"
-                            class="w-full border border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-200 focus:border-blue-400">
-                        @error('no_hp')<p class="text-red-500 text-sm mt-1">{{ $message }}</p>@enderror
+                            class="w-full border border-gray-300 rounded-lg px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-colors">
+                        @error('no_hp')
+                            <p class="text-red-500 text-sm mt-1.5 flex items-center">
+                                <svg class="w-4 h-4 mr-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                {{ $message }}
+                            </p>
+                        @enderror
                     </div>
                     <div>
-                        <label for="email" class="block text-gray-500 mb-1">Email <span class="text-red-500">*</span></label>
+                        <label for="email" class="block text-sm font-medium text-gray-700 mb-1.5">
+                            Email <span class="text-red-500">*</span>
+                        </label>
                         <input type="email" name="email" id="email" value="{{ old('email', $guru->email ?? $guru->user->email) }}" required
-                            class="w-full border border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-200 focus:border-blue-400">
-                        @error('email')<p class="text-red-500 text-sm mt-1">{{ $message }}</p>@enderror
+                            class="w-full border border-gray-300 rounded-lg px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-colors">
+                        @error('email')
+                            <p class="text-red-500 text-sm mt-1.5 flex items-center">
+                                <svg class="w-4 h-4 mr-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                {{ $message }}
+                            </p>
+                        @enderror
                     </div>
                 </div>
             </div>
 
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                <h4 class="font-semibold text-gray-900 mb-4 pb-2 border-b border-gray-100">Data Pendidikan</h4>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+            <!-- Data Pendidikan -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <h4 class="text-base font-semibold text-gray-900 mb-5 flex items-center pb-3 border-b border-gray-100">
+                    <svg class="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"></path>
+                    </svg>
+                    Data Pendidikan
+                </h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div>
-                        <label for="pendidikan_terakhir" class="block text-gray-500 mb-1">Pendidikan Terakhir</label>
+                        <label for="pendidikan_terakhir" class="block text-sm font-medium text-gray-700 mb-1.5">Pendidikan Terakhir</label>
                         <input type="text" name="pendidikan_terakhir" id="pendidikan_terakhir" value="{{ old('pendidikan_terakhir', $guru->pendidikan_terakhir) }}"
-                            class="w-full border border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-200 focus:border-blue-400"
+                            class="w-full border border-gray-300 rounded-lg px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-colors"
                             placeholder="Contoh: S1 Pendidikan">
-                        @error('pendidikan_terakhir')<p class="text-red-500 text-sm mt-1">{{ $message }}</p>@enderror
+                        @error('pendidikan_terakhir')
+                            <p class="text-red-500 text-sm mt-1.5 flex items-center">
+                                <svg class="w-4 h-4 mr-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                {{ $message }}
+                            </p>
+                        @enderror
                     </div>
                     <div>
-                        <label for="jurusan_pendidikan" class="block text-gray-500 mb-1">Jurusan Pendidikan</label>
+                        <label for="jurusan_pendidikan" class="block text-sm font-medium text-gray-700 mb-1.5">Jurusan Pendidikan</label>
                         <input type="text" name="jurusan_pendidikan" id="jurusan_pendidikan" value="{{ old('jurusan_pendidikan', $guru->jurusan_pendidikan) }}"
-                            class="w-full border border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-200 focus:border-blue-400"
+                            class="w-full border border-gray-300 rounded-lg px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-colors"
                             placeholder="Contoh: Teknik Informatika">
-                        @error('jurusan_pendidikan')<p class="text-red-500 text-sm mt-1">{{ $message }}</p>@enderror
+                        @error('jurusan_pendidikan')
+                            <p class="text-red-500 text-sm mt-1.5 flex items-center">
+                                <svg class="w-4 h-4 mr-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                {{ $message }}
+                            </p>
+                        @enderror
                     </div>
                 </div>
             </div>
 
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                <h4 class="font-semibold text-gray-900 mb-4 pb-2 border-b border-gray-100">Data Kepegawaian</h4>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                    <div>
-                        <p class="text-gray-500 mb-1">Wali Kelas</p>
-                        <p class="font-medium text-gray-900">{{ $guru->kelasWali?->nama_kelas ?? '—' }}</p>
+            <!-- Data Kepegawaian -->
+            <div class="bg-gray-50/50 rounded-xl border border-gray-200 p-6">
+                <h4 class="text-base font-semibold text-gray-900 mb-5 flex items-center pb-3 border-b border-gray-200">
+                    <svg class="w-5 h-5 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                    </svg>
+                    Data Kepegawaian
+                </h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div class="bg-white rounded-lg p-3 border border-gray-100">
+                        <p class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Wali Kelas</p>
+                        <p class="text-sm font-semibold text-gray-900">{{ $guru->kelasWali?->nama_kelas ?? '—' }}</p>
                     </div>
-                    <div>
-                        <p class="text-gray-500 mb-1">Status</p>
-                        <span class="inline-block px-3 py-1 rounded-full text-xs font-medium {{ $guru->status === 'aktif' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600' }}">
+                    <div class="bg-white rounded-lg p-3 border border-gray-100">
+                        <p class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Status</p>
+                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium {{ $guru->status === 'aktif' ? 'bg-green-100 text-green-700 border border-green-200' : 'bg-gray-100 text-gray-600 border border-gray-200' }}">
+                            <span class="w-1.5 h-1.5 rounded-full {{ $guru->status === 'aktif' ? 'bg-green-500' : 'bg-gray-400' }} mr-1.5"></span>
                             {{ ucfirst($guru->status) }}
                         </span>
                     </div>
                     @if($guru->mataPelajarans->isNotEmpty())
-                        <div class="md:col-span-2">
-                            <p class="text-gray-500 mb-2">Mata Pelajaran</p>
+                        <div class="md:col-span-2 bg-white rounded-lg p-3 border border-gray-100">
+                            <p class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">Mata Pelajaran</p>
                             <div class="flex flex-wrap gap-2">
                                 @foreach($guru->mataPelajarans as $mapel)
-                                    <span class="px-3 py-1 bg-blue-50 text-blue-800 rounded-full text-xs font-medium">{{ $mapel->nama_mapel }}</span>
+                                    <span class="px-2.5 py-1 bg-blue-50 text-blue-700 rounded-md text-xs font-medium border border-blue-100">{{ $mapel->nama_mapel }}</span>
                                 @endforeach
                             </div>
                         </div>
                     @endif
                 </div>
-                <p class="text-xs text-gray-400 mt-4">Wali kelas, mata pelajaran, dan status hanya dapat diubah oleh admin.</p>
             </div>
 
-            <div class="flex justify-end">
-                <button type="submit" class="px-6 py-2.5 bg-blue-800 text-white rounded-lg hover:bg-blue-900 transition-colors text-sm font-medium">
-                    <i class="fas fa-save mr-2"></i>Simpan Perubahan
+            <!-- Submit Button -->
+            <div class="flex justify-end pt-2">
+                <button type="submit" class="inline-flex items-center px-6 py-2.5 bg-blue-700 hover:bg-blue-800 text-white rounded-lg transition-colors text-sm font-medium shadow-sm hover:shadow focus:ring-2 focus:ring-blue-500/20 focus:outline-none">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    Simpan Perubahan
                 </button>
             </div>
         </form>
 
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-            <h4 class="font-semibold text-gray-900 mb-4 pb-2 border-b border-gray-100">Ubah Password</h4>
+        <!-- Ubah Password -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <h4 class="text-base font-semibold text-gray-900 mb-5 flex items-center pb-3 border-b border-gray-100">
+                <svg class="w-5 h-5 mr-2 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                </svg>
+                Ubah Password
+            </h4>
             <form action="{{ route('guru.profile.password') }}" method="POST">
                 @csrf
                 @method('PUT')
-                <div class="space-y-4 max-w-md">
-                    <div>
-                        <label for="guru-current-password" class="block text-sm text-gray-600 mb-1">Password Saat Ini</label>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5 max-w-2xl">
+                    <div class="md:col-span-2">
+                        <label for="guru-current-password" class="block text-sm font-medium text-gray-700 mb-1.5">Password Saat Ini</label>
                         <input type="password" name="current_password" id="guru-current-password" required
-                            class="w-full border border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-200 focus:border-blue-400">
-                        @error('current_password')<p class="text-red-500 text-sm mt-1">{{ $message }}</p>@enderror
+                            class="w-full border border-gray-300 rounded-lg px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-colors">
+                        @error('current_password')
+                            <p class="text-red-500 text-sm mt-1.5 flex items-center">
+                                <svg class="w-4 h-4 mr-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                {{ $message }}
+                            </p>
+                        @enderror
                     </div>
                     <div>
-                        <label for="guru-new-password" class="block text-sm text-gray-600 mb-1">Password Baru</label>
+                        <label for="guru-new-password" class="block text-sm font-medium text-gray-700 mb-1.5">Password Baru</label>
                         <input type="password" name="password" id="guru-new-password" required
-                            class="w-full border border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-200 focus:border-blue-400">
-                        @error('password')<p class="text-red-500 text-sm mt-1">{{ $message }}</p>@enderror
+                            class="w-full border border-gray-300 rounded-lg px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-colors">
+                        @error('password')
+                            <p class="text-red-500 text-sm mt-1.5 flex items-center">
+                                <svg class="w-4 h-4 mr-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                {{ $message }}
+                            </p>
+                        @enderror
                     </div>
                     <div>
-                        <label for="guru-password-confirmation" class="block text-sm text-gray-600 mb-1">Konfirmasi Password Baru</label>
+                        <label for="guru-password-confirmation" class="block text-sm font-medium text-gray-700 mb-1.5">Konfirmasi Password Baru</label>
                         <input type="password" name="password_confirmation" id="guru-password-confirmation" required
-                            class="w-full border border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-200 focus:border-blue-400">
+                            class="w-full border border-gray-300 rounded-lg px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-colors">
                     </div>
-                    <div>
-                        <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm font-medium">
-                            <i class="fas fa-key mr-2"></i>Update Password
+                    <div class="md:col-span-2">
+                        <button type="submit" class="inline-flex items-center px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors text-sm font-medium shadow-sm hover:shadow focus:ring-2 focus:ring-red-500/20 focus:outline-none">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path>
+                            </svg>
+                            Update Password
                         </button>
                     </div>
                 </div>
@@ -224,7 +381,7 @@ function previewImage(input) {
         if (!img) {
             img = document.createElement('img');
             img.id = 'preview-foto';
-            img.className = 'w-32 h-32 rounded-full border-4 border-white object-cover shadow-lg';
+            img.className = 'w-24 h-24 rounded-full border-4 border-white object-cover shadow-lg bg-white';
             placeholder?.parentNode.appendChild(img);
         }
         if (placeholder) placeholder.classList.add('hidden');
