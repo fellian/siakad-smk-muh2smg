@@ -93,7 +93,7 @@
                             <button @click="profileOpen = !profileOpen" @click.away="profileOpen = false" class="flex items-center space-x-3 focus:outline-none hover:bg-gray-50 p-1.5 rounded-xl transition-colors">
                                 <div class="hidden md:block text-right">
                                     <p class="text-sm font-bold text-blue-900 leading-tight">{{ auth()->user()->name ?? 'Administrator' }}</p>
-                                    <p class="text-[11px] font-medium text-gray-500">Super Admin</p>
+                                    <p class="text-[11px] font-medium text-gray-500">Admin</p>
                                 </div>
                                 <div class="w-9 h-9 rounded-full bg-blue-50 border-2 border-white shadow-sm flex items-center justify-center overflow-hidden shrink-0">
                                     <img src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name ?? 'Administrator') }}&background=EFF6FF&color=1D4ED8&bold=true" alt="Profile" class="w-full h-full object-cover">

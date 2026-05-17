@@ -119,10 +119,10 @@
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Email Siswa</label>
-                        <input type="email" name="email" value="{{ old('email') }}" 
-                               class="w-full border rounded-lg px-4 py-2 @error('email') border-red-500 @enderror" 
+                        <input type="email" name="email_siswa" value="{{ old('email_siswa') }}" 
+                               class="w-full border rounded-lg px-4 py-2 @error('email_siswa') border-red-500 @enderror" 
                                placeholder="email@example.com">
-                        @error('email')<p class="text-red-500 text-sm mt-1">{{ $message }}</p>@enderror
+                        @error('email_siswa')<p class="text-red-500 text-sm mt-1">{{ $message }}</p>@enderror
                     </div>
                 </div>
             </div>
@@ -184,10 +184,10 @@
                         <label class="block text-sm font-medium text-gray-700 mb-2">
                             Email Login <span class="text-red-500">*</span>
                         </label>
-                        <input type="email" name="email" value="{{ old('email') }}" 
-                               class="w-full border rounded-lg px-4 py-2 @error('email') border-red-500 @enderror" 
+                        <input type="email" name="email_login" value="{{ old('email_login') }}" 
+                               class="w-full border rounded-lg px-4 py-2 @error('email_login') border-red-500 @enderror" 
                                placeholder="Email untuk login">
-                        @error('email')<p class="text-red-500 text-sm mt-1">{{ $message }}</p>@enderror
+                        @error('email_login')<p class="text-red-500 text-sm mt-1">{{ $message }}</p>@enderror
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">

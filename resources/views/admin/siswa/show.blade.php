@@ -10,14 +10,14 @@
     <div class="lg:col-span-1">
         <!-- Card Profil -->
         <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-            <!-- Header dengan gradient -->
+            
             <div class="bg-gradient-to-br from-green-600 to-green-700 h-28 relative">
                 <div class="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-black/10 to-transparent"></div>
             </div>
             
             <!-- Konten Profil -->
             <div class="px-6 pb-6 text-center relative">
-                <!-- Foto Profil - absolute agar overlap ke header -->
+                
                 <div class="absolute -top-12 left-1/2 -translate-x-1/2">
                     @if($siswa->foto)
                         <img src="{{ asset('storage/' . $siswa->foto) }}" 

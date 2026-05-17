@@ -4,32 +4,11 @@
 @section('page-title', 'Manajemen Tahun Ajaran')
 
 @section('content')
-@if($tahunAjaranAktif)
-    <div class="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg flex items-start gap-3">
-        <i class="fas fa-check-circle text-green-600 mt-0.5"></i>
-        <div>
-            <p class="font-semibold text-green-800">Tahun Ajaran Aktif Saat Ini</p>
-            <p class="text-green-700 text-sm mt-1">
-                {{ $tahunAjaranAktif->tahun }} — Semester {{ $tahunAjaranAktif->semester }}
-                <span class="text-green-600">(Kelas baru & modul akademik memakai ini)</span>
-            </p>
-        </div>
-    </div>
-@else
-    <div class="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-lg flex items-start gap-3">
-        <i class="fas fa-exclamation-triangle text-amber-600 mt-0.5"></i>
-        <div>
-            <p class="font-semibold text-amber-800">Belum Ada Tahun Ajaran Aktif</p>
-            <p class="text-amber-700 text-sm mt-1">Aktifkan satu tahun ajaran agar penambahan kelas dan fitur akademik berjalan normal.</p>
-        </div>
-    </div>
-@endif
 
 <div class="bg-white rounded-lg shadow">
     <div class="p-6 border-b flex flex-wrap justify-between items-center gap-4">
         <div>
             <h3 class="text-lg font-semibold">Daftar Tahun Ajaran</h3>
-            <p class="text-sm text-gray-500 mt-1">Hanya satu tahun ajaran yang boleh aktif. Gunakan tombol &quot;Jadikan Aktif&quot; saat ganti semester.</p>
         </div>
         <a href="{{ route('admin.tahun-ajaran.create') }}" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
             <i class="fas fa-plus mr-2"></i>Tambah Tahun Ajaran

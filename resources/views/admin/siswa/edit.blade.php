@@ -28,7 +28,7 @@
                 </h4>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <!-- NIS -->
+                    
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">
                             NIS <span class="text-red-500">*</span>
@@ -119,10 +119,12 @@
                                class="w-full border rounded-lg px-4 py-2">
                     </div>
                     <div>
+                        
                         <label class="block text-sm font-medium text-gray-700 mb-2">Email Siswa</label>
-                        <input type="email" name="email_siswa" value="{{ old('email', $siswa->email) }}" 
-                               class="w-full border rounded-lg px-4 py-2" disabled>
-                        <p class="text-xs text-gray-500 mt-1">Email tidak bisa diubah. Hubungi admin.</p>
+                        <input type="email" name="email_siswa" value="{{ old('email_siswa', $siswa->email) }}" 
+                               class="w-full border rounded-lg px-4 py-2 @error('email_siswa') border-red-500 @enderror"
+                               placeholder="email.siswa@example.com">
+                        @error('email_siswa')<p class="text-red-500 text-sm mt-1">{{ $message }}</p>@enderror
                     </div>
                 </div>
             </div>
@@ -159,7 +161,7 @@
                             Tanggal Masuk <span class="text-red-500">*</span>
                         </label>
                         <input type="date" name="tanggal_masuk" 
-                               value="{{ old('tanggal_masuk', $siswa->tanggal_masuk->format('Y-m-d')) }}" 
+                               value="{{ old('tanggal_masuk', $siswa->tanggal_masuk?->format('Y-m-d')) }}" 
                                class="w-full border rounded-lg px-4 py-2 @error('tanggal_masuk') border-red-500 @enderror">
                         @error('tanggal_masuk')<p class="text-red-500 text-sm mt-1">{{ $message }}</p>@enderror
                     </div>
@@ -182,17 +184,29 @@
                 </div>
             </div>
 
-            <!-- Ubah Password -->
             <div class="mb-6">
                 <h4 class="text-sm font-bold text-gray-700 uppercase tracking-wider mb-4 pb-2 border-b">
-                    <i class="fas fa-key mr-2"></i>Ubah Password (Opsional)
+                    <i class="fas fa-key mr-2"></i>Kredensial Akun Login
                 </h4>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Password Baru</label>
-                    <input type="password" name="password" 
-                           class="w-full border rounded-lg px-4 py-2" 
-                           placeholder="Kosongkan jika tidak diubah">
-                    <p class="text-xs text-gray-500 mt-1">Biarkan kosong jika tidak ingin mengubah password</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Email Login <span class="text-red-500">*</span>
+                        </label>
+                        <input type="email" name="email_login" value="{{ old('email_login', $siswa->user?->email) }}" 
+                               class="w-full border rounded-lg px-4 py-2 @error('email_login') border-red-500 @enderror"
+                               placeholder="Email untuk login aplikasi">
+                        @error('email_login')<p class="text-red-500 text-sm mt-1">{{ $message }}</p>@enderror
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Password Baru (Opsional)</label>
+                        <input type="password" name="password" 
+                               class="w-full border rounded-lg px-4 py-2 @error('password') border-red-500 @enderror" 
+                               placeholder="Kosongkan jika tidak diubah">
+                        <p class="text-xs text-gray-500 mt-1">Biarkan kosong jika tidak ingin merubah password login</p>
+                        @error('password')<p class="text-red-500 text-sm mt-1">{{ $message }}</p>@enderror
+                    </div>
                 </div>
             </div>
 
@@ -239,7 +253,6 @@
 
 @push('scripts')
 <script>
-    // Preview foto sebelum upload
     document.getElementById('input-foto').addEventListener('change', function(e) {
         const file = e.target.files[0];
         if (file) {

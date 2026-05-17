@@ -6,15 +6,12 @@
 @section('content')
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
     
-    <!-- Sidebar Profil -->
     <div class="lg:col-span-1">
         <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-            <!-- Header dengan gradient -->
             <div class="bg-gradient-to-br from-blue-600 to-blue-700 h-28 relative">
                 <div class="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-black/10 to-transparent"></div>
             </div>
             
-            <!-- Konten Profil -->
             <div class="px-6 pb-6 text-center relative">
                 
                 <div class="absolute -top-12 left-1/2 -translate-x-1/2">
@@ -35,7 +32,6 @@
                     @endif
                 </div>
                 
-                <!-- Identitas - padding top agar tidak tertutup foto -->
                 <div class="pt-14">
                     <h2 class="text-lg font-bold text-gray-900">{{ $siswa->nama_lengkap }}</h2>
                     <div class="mt-2 space-y-1">
@@ -50,42 +46,39 @@
         </div>
     </div>
 
-    <!-- Main Content -->
     <div class="lg:col-span-2 space-y-6">
         
-        <!-- Foto Profil Upload -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <h4 class="text-base font-semibold text-gray-900 mb-4 flex items-center">
-                <svg class="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                </svg>
-                Foto Profil
-            </h4>
-            <div>
-                <label for="siswa-foto" class="block text-sm text-gray-600 mb-2">Unggah foto baru (JPG/PNG, maks. 2MB)</label>
-                <input
-                    type="file"
-                    name="foto"
-                    id="siswa-foto"
-                    accept="image/*"
-                    class="block w-full text-sm text-gray-600 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 file:transition-colors cursor-pointer"
-                    onchange="previewImage(this)"
-                >
-                @error('foto')
-                    <p class="text-red-500 text-sm mt-2 flex items-center">
-                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
-                        {{ $message }}
-                    </p>
-                @enderror
-            </div>
-        </div>
-
-        <!-- Data Pribadi -->
         <form action="{{ route('siswa.profile.update') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
             @csrf
             @method('PATCH')
+
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <h4 class="text-base font-semibold text-gray-900 mb-4 flex items-center">
+                    <svg class="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    </svg>
+                    Foto Profil
+                </h4>
+                <div>
+                    <label for="siswa-foto" class="block text-sm text-gray-600 mb-2">Unggah foto baru (JPG/PNG, maks. 2MB)</label>
+                    <input
+                        type="file"
+                        name="foto"
+                        id="siswa-foto"
+                        accept="image/*"
+                        class="block w-full text-sm text-gray-600 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 file:transition-colors cursor-pointer"
+                        onchange="previewImage(this)"
+                    >
+                    @error('foto')
+                        <p class="text-red-500 text-sm mt-2 flex items-center">
+                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            {{ $message }}
+                        </p>
+                    @enderror
+                </div>
+            </div>
 
             <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                 <h4 class="text-base font-semibold text-gray-900 mb-5 flex items-center pb-3 border-b border-gray-100">
@@ -227,7 +220,6 @@
                 </div>
             </div>
 
-            <!-- Data Orang Tua -->
             <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                 <h4 class="text-base font-semibold text-gray-900 mb-5 flex items-center pb-3 border-b border-gray-100">
                     <svg class="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -265,7 +257,6 @@
                 </div>
             </div>
 
-            <!-- Data Akademik (Read Only) -->
             <div class="bg-gray-50/50 rounded-xl border border-gray-200 p-6">
                 <h4 class="text-base font-semibold text-gray-900 mb-5 flex items-center pb-3 border-b border-gray-200">
                     <svg class="w-5 h-5 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -296,7 +287,6 @@
                 </div>
             </div>
 
-            <!-- Submit Button -->
             <div class="flex justify-end pt-2">
                 <button type="submit" class="inline-flex items-center px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors text-sm font-medium shadow-sm hover:shadow focus:ring-2 focus:ring-blue-500/20 focus:outline-none">
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -305,9 +295,7 @@
                     Simpan Perubahan
                 </button>
             </div>
-        </form>
-
-        <!-- Ubah Password -->
+        </form> 
         <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
             <h4 class="text-base font-semibold text-gray-900 mb-5 flex items-center pb-3 border-b border-gray-100">
                 <svg class="w-5 h-5 mr-2 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
