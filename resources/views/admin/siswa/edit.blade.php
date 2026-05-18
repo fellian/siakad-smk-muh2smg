@@ -186,7 +186,7 @@
 
             <div class="mb-6">
                 <h4 class="text-sm font-bold text-gray-700 uppercase tracking-wider mb-4 pb-2 border-b">
-                    <i class="fas fa-key mr-2"></i>Kredensial Akun Login
+                    <i class="fas fa-key mr-2"></i>Akun Login
                 </h4>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">

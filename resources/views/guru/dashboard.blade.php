@@ -69,13 +69,10 @@
                         $jamSelesai = \Carbon\Carbon::today()->setTimeFromTimeString(\Carbon\Carbon::parse($jadwal->jam_selesai)->format('H:i:s'));
                         $sesiBuka = $sesiAktifHariIni[$jadwal->id] ?? null;
                         
-                        // Active logic: time is between start and end, or session is open
                         $isActive = $nowDashboard->between($jamMulai, $jamSelesai) || $sesiBuka;
                         $isPast = $nowDashboard->greaterThan($jamSelesai) && !$sesiBuka;
                         $isFuture = $nowDashboard->lessThan($jamMulai);
-                        
-                        // Check if a session was opened and closed already (status selesai)
-                        // If it's in the past, and there is no open session, it's considered done.
+                
                     @endphp
 
                     @if($isActive || $sesiBuka)
