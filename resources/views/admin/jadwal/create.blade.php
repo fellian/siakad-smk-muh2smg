@@ -15,6 +15,16 @@
         
         <form action="{{ route('admin.jadwal.store') }}" method="POST" class="p-6">
             @csrf
+            @if ($errors->any())
+                <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4 text-sm">
+                    <strong class="font-semibold"><i class="fas fa-exclamation-triangle mr-1"></i> Gagal Menyimpan!</strong>
+                    <ul class="list-disc pl-5 mt-1">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                 <!-- Kelas -->
@@ -125,14 +135,6 @@
                     @endforeach
                 </select>
                 @error('tahun_ajaran_id')<p class="text-red-500 text-sm mt-1">{{ $message }}</p>@enderror
-            </div>
-
-            <!-- Cek Bentrok Info -->
-            <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
-                <p class="text-sm text-yellow-700">
-                    <i class="fas fa-info-circle mr-1"></i>
-                    Sistem akan otomatis mengecek bentrok jadwal guru dan kelas.
-                </p>
             </div>
 
             <div class="flex justify-end gap-3">
