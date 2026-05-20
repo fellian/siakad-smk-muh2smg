@@ -33,7 +33,7 @@ class JadwalController extends Controller
     {
         $kelas = Kelas::all();
         $mapels = MataPelajaran::all();
-        $gurus = Guru::where('status', 'aktif')->get();
+        $gurus = Guru::where('status', 'aktif')->with('mataPelajarans')->get();
         $tahunAjarans = TahunAjaran::where('status', 'aktif')->get();
         $hari = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
 
@@ -53,10 +53,16 @@ class JadwalController extends Controller
             'tahun_ajaran_id'   => 'required|exists:tahun_ajarans,id',
         ]);
 
+        $guru = Guru::findOrFail($request->guru_id);
+        if (!$guru->mataPelajarans()->where('mata_pelajaran_id', $request->mata_pelajaran_id)->exists()) {
+            
+            $guru->mataPelajarans()->attach($request->mata_pelajaran_id);
+        }
+
         $jamMulai   = $request->jam_mulai;
         $jamSelesai = $request->jam_selesai;
 
-        // 1. Validasi Bentrok GURU (Guru tidak boleh mengajar di kelas manapun di jam yang sama)
+
         $guruBentrok = Jadwal::where('guru_id', $request->guru_id)
             ->where('hari', $request->hari)
             ->where('tahun_ajaran_id', $request->tahun_ajaran_id)
@@ -70,7 +76,6 @@ class JadwalController extends Controller
             return back()->withErrors(['guru_id' => 'Guru yang dipilih sudah memiliki jadwal mengajar di kelas lain pada waktu tersebut!'])->withInput();
         }
 
-        // 2. Validasi Bentrok KELAS (Kelas tidak boleh menerima pelajaran lain di jam yang sama)
         $kelasBentrok = Jadwal::where('kelas_id', $request->kelas_id)
             ->where('hari', $request->hari)
             ->where('tahun_ajaran_id', $request->tahun_ajaran_id)
@@ -84,7 +89,6 @@ class JadwalController extends Controller
             return back()->withErrors(['kelas_id' => 'Kelas yang dipilih sudah memiliki jadwal pelajaran lain pada waktu tersebut!'])->withInput();
         }
 
-        // Jika aman, buat data jadwal baru
         Jadwal::create($request->all());
 
         return redirect()->route('admin.jadwal.index')->with('success', 'Jadwal berhasil ditambahkan!');
@@ -94,7 +98,7 @@ class JadwalController extends Controller
     {
         $kelas = Kelas::all();
         $mapels = MataPelajaran::all();
-        $gurus = Guru::where('status', 'aktif')->get();
+        $gurus = Guru::where('status', 'aktif')->with('mataPelajarans')->get();
         $tahunAjarans = TahunAjaran::all();
         $hari = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
 
@@ -114,10 +118,16 @@ class JadwalController extends Controller
             'tahun_ajaran_id'   => 'required|exists:tahun_ajarans,id',
         ]);
 
+        
+        $guru = Guru::findOrFail($request->guru_id);
+        if (!$guru->mataPelajarans()->where('mata_pelajaran_id', $request->mata_pelajaran_id)->exists()) {
+           
+            $guru->mataPelajarans()->attach($request->mata_pelajaran_id);
+        }
+
         $jamMulai   = $request->jam_mulai;
         $jamSelesai = $request->jam_selesai;
 
-        // 1. Validasi Bentrok GURU saat Update (Kecualikan ID jadwal ini sendiri)
         $guruBentrok = Jadwal::where('id', '!=', $jadwal->id)
             ->where('guru_id', $request->guru_id)
             ->where('hari', $request->hari)
@@ -132,7 +142,6 @@ class JadwalController extends Controller
             return back()->withErrors(['guru_id' => 'Guru yang dipilih sudah memiliki jadwal mengajar di kelas lain pada waktu tersebut!'])->withInput();
         }
 
-        // 2. Validasi Bentrok KELAS saat Update (Kecualikan ID jadwal ini sendiri)
         $kelasBentrok = Jadwal::where('id', '!=', $jadwal->id)
             ->where('kelas_id', $request->kelas_id)
             ->where('hari', $request->hari)
@@ -147,7 +156,7 @@ class JadwalController extends Controller
             return back()->withErrors(['kelas_id' => 'Kelas yang dipilih sudah memiliki jadwal pelajaran lain pada waktu tersebut!'])->withInput();
         }
 
-        // Jika aman, lakukan update data
+       
         $jadwal->update($request->all());
 
         return redirect()->route('admin.jadwal.index')->with('success', 'Jadwal berhasil diperbarui!');

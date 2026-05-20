@@ -30,7 +30,7 @@
             <select name="kelompok" class="border rounded-lg px-4 py-2">
                 <option value="">Semua Kelompok</option>
                 <option value="1" {{ request('kelompok') == '1' ? 'selected' : '' }}>Kelompok A (Umum)</option>
-                <option value="2" {{ request('kelompok') == '2' ? 'selected' : '' }}>Kelompok B (Umum)</option>
+                <option value="2" {{ request('kelompok') == '2' ? 'selected' : '' }}>Kelompok B (Peminatan)</option>
                 <option value="3" {{ request('kelompok') == '3' ? 'selected' : '' }}>Kelompok C (Kejuruan)</option>
             </select>
 

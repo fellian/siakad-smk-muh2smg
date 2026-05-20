@@ -49,6 +49,17 @@ class KelasController extends Controller
                 ->with('error', 'Tidak ada tahun ajaran aktif. Buka menu Tahun Ajaran dan aktifkan satu periode terlebih dahulu.');
         }
 
+        if ($request->filled('wali_kelas_id')) {
+            $guruSudahJadiWali = Kelas::where('wali_kelas_id', $request->wali_kelas_id)->exists();
+
+            if ($guruSudahJadiWali) {
+                return redirect()
+                    ->back()
+                    ->withInput()
+                    ->withErrors(['wali_kelas_id' => 'Guru yang Anda pilih sudah menjadi wali kelas di kelas lain!']);
+            }
+        }
+
         Kelas::create([
             ...$validated,
             'wali_kelas_id' => $validated['wali_kelas_id'] ?: null,
@@ -91,6 +102,19 @@ class KelasController extends Controller
             'wali_kelas_id' => 'nullable|exists:gurus,id',
             'tahun_ajaran_id' => 'required|exists:tahun_ajarans,id',
         ]);
+
+        if ($request->filled('wali_kelas_id')) {
+            $guruSudahJadiWali = Kelas::where('id', '!=', $kelas->id)
+                ->where('wali_kelas_id', $request->wali_kelas_id)
+                ->exists();
+
+            if ($guruSudahJadiWali) {
+                return redirect()
+                    ->back()
+                    ->withInput()
+                    ->withErrors(['wali_kelas_id' => 'Guru yang Anda pilih sudah menjadi wali kelas di kelas lain!']);
+            }
+        }
 
         $kelas->update($request->all());
 

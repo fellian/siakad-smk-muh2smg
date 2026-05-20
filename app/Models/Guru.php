@@ -68,9 +68,10 @@ class Guru extends Model
         return $this->hasMany(Absensi::class);
     }
 
-    // Relasi ke Mata Pelajaran (many-to-many)
+    // Relasi ke Mata Pelajaran (many-to-many) dengan timestamps
     public function mataPelajarans(): BelongsToMany
     {
-        return $this->belongsToMany(MataPelajaran::class, 'guru_mapel');
+        return $this->belongsToMany(MataPelajaran::class, 'guru_mapel')
+                    ->withTimestamps(); // Ini akan otomatis mengisi created_at dan updated_at
     }
 }

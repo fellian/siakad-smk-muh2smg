@@ -59,7 +59,7 @@
                 <label class="block text-gray-700 text-sm font-bold mb-2">Kelompok</label>
                 <select name="kelompok" class="w-full border rounded-lg px-4 py-2 @error('kelompok') border-red-500 @enderror">
                     <option value="1" {{ old('kelompok') == '1' ? 'selected' : '' }}>A - Umum</option>
-                    <option value="2" {{ old('kelompok') == '2' ? 'selected' : '' }}>B - Umum</option>
+                    <option value="2" {{ old('kelompok') == '2' ? 'selected' : '' }}>B - Peminatan</option>
                     <option value="3" {{ old('kelompok') == '3' ? 'selected' : '' }}>C - Kejuruan</option>
                 </select>
                 @error('kelompok')
