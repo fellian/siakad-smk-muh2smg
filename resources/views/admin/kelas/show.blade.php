@@ -221,7 +221,7 @@
                             <tbody class="divide-y">
 
                                 @foreach($kelas->jadwals->sortBy([
-                                    ['hari', 'asc'],
+                                    ['hari', 'desc'],
                                     ['jam_mulai', 'asc']
                                 ]) as $jadwal)
 
