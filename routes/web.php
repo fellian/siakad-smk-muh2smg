@@ -47,6 +47,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('users', [App\Http\Controllers\Admin\UserController::class, 'index'])->name('users.index');
     Route::post('users/{user}/reset-password', [App\Http\Controllers\Admin\UserController::class, 'resetPassword'])->name('users.reset-password');
     Route::post('users/{user}/toggle-status', [App\Http\Controllers\Admin\UserController::class, 'toggleStatus'])->name('users.toggle-status');
+
+    Route::get('/aktivitas-sistem', [App\Http\Controllers\Admin\DashboardController::class, 'aktivitasSistem'])->name('aktivitas.index');
 });
 
 
