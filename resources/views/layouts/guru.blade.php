@@ -70,17 +70,6 @@
                     </div>
                     
                     <div class="flex items-center space-x-3 sm:space-x-5">
-                        <button class="text-gray-500 hover:text-gray-700 transition-colors relative p-1">
-                            <i data-lucide="bell" class="w-5 h-5"></i>
-                            <span class="absolute top-1.5 right-1.5 flex h-2 w-2">
-                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                                <span class="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
-                            </span>
-                        </button>
-                        
-                        <button class="text-gray-500 hover:text-gray-700 transition-colors p-1">
-                            <i data-lucide="settings" class="w-5 h-5"></i>
-                        </button>
                         
                         <div class="h-8 w-px bg-gray-200 hidden sm:block mx-2"></div>
                         

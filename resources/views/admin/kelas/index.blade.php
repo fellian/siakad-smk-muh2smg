@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
 @section('title', 'Data Kelas')
-@section('page-title', 'Manajemen Kelas & Jurusan')
+@section('page-title', 'Manajemen Kelas')
 
 @section('content')
 <div class="space-y-6">

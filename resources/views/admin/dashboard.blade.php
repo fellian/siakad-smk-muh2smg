@@ -8,7 +8,7 @@
     <!-- Header Selamat Datang -->
     <div class="mb-8">
         <h1 class="text-3xl font-bold text-blue-900 mb-2">Selamat Datang, Admin</h1>
-        <p class="text-gray-500 text-sm sm:text-base">Sistem Informasi Academic SMK Muhammadiyah 2 Semarang</p>
+        <p class="text-gray-500 text-sm sm:text-base">Sistem Informasi Akademik SMK Muhammadiyah 2 Semarang</p>
     </div>
 
     <!-- Statistik Utama -->

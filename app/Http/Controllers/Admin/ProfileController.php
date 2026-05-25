@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
@@ -22,7 +23,7 @@ class ProfileController extends Controller
             return redirect()->route('siswa.profile.index');
         }
 
-        return view('profile.edit', compact('user'));
+        return view('admin.profile.edit', compact('user'));
     }
 
     public function update(Request $request)
@@ -37,7 +38,23 @@ class ProfileController extends Controller
         $user->update($validated);
 
         return redirect()
-            ->route('profile.edit')
+            ->route('admin.profile.edit')
+            ->with('success', 'Profil berhasil diperbarui!');
+    }
+
+    public function updatePassword(Request $request)
+    {
+        $validated = $request->validate([
+            'current_password' => ['required', 'current_password'],
+            'password' => ['required', 'confirmed', 'min:8'],
+        ]);
+
+        $request->user()->update([
+            'password' => bcrypt($validated['password']),
+        ]);
+
+        return redirect()
+            ->route('admin.profile.edit')
             ->with('success', 'Profil berhasil diperbarui!');
     }
 
