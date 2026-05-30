@@ -108,7 +108,7 @@
                             <p class="text-xs text-gray-500">Tempat, Tanggal Lahir</p>
                             <p class="font-medium text-gray-900">
                                 @if($guru->tempat_lahir && $guru->tanggal_lahir)
-                                    {{ $guru->tempat_lahir }}, {{ $guru->tanggal_lahir->format('d F Y') }}
+                                    {{ $guru->tempat_lahir }}, {{ $guru->tanggal_lahir->translatedFormat('d F Y') }}
                                 @else
                                     -
                                 @endif

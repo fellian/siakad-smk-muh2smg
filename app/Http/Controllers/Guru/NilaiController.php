@@ -18,12 +18,14 @@ class NilaiController extends Controller
         $guru = Auth::user()->guru;
         $tahunAjaran = TahunAjaran::where('status', 'aktif')->first();
 
-        // Kelas yang diajar guru ini
-        $kelasDiampu = $guru->jadwals()
+        $jadwalRaw = $guru->jadwals()
             ->where('tahun_ajaran_id', $tahunAjaran?->id)
-            ->with('kelas', 'mataPelajaran')
-            ->get()
-            ->unique('kelas_id');
+            ->with(['kelas.jurusan', 'mataPelajaran'])
+            ->get();
+
+        $kelasDiampu = $jadwalRaw->unique(function ($item) {
+            return $item->kelas_id . '-' . $item->mata_pelajaran_id;
+        });
 
         return view('guru.nilai.index', compact('kelasDiampu', 'tahunAjaran'));
     }
@@ -34,10 +36,9 @@ class NilaiController extends Controller
         $kelas = Kelas::findOrFail($kelas_id);
         $mapel = MataPelajaran::findOrFail($mapel_id);
         $tahunAjaran = TahunAjaran::where('status', 'aktif')->first();
-        
+
         $semester = $request->get('semester', '1');
 
-        // Cek apakah guru mengajar mapel ini di kelas ini
         $jadwal = $guru->jadwals()
             ->where('kelas_id', $kelas_id)
             ->where('mata_pelajaran_id', $mapel_id)
@@ -53,7 +54,6 @@ class NilaiController extends Controller
             ->orderBy('nama_lengkap')
             ->get();
 
-        // Ambil nilai yang sudah ada
         $nilais = Nilai::where('kelas_id', $kelas_id)
             ->where('mata_pelajaran_id', $mapel_id)
             ->where('guru_id', $guru->id)
@@ -100,13 +100,37 @@ class NilaiController extends Controller
         return redirect()->back()->with('success', 'Nilai berhasil disimpan!');
     }
 
-    public function rekap($kelas_id)
+    public function rekap(Request $request, $kelas_id, $mapel_id)
     {
         $guru = Auth::user()->guru;
-        $kelas = Kelas::with(['siswas' => function($q) {
-            $q->where('status', 'aktif')->orderBy('nama_lengkap');
-        }, 'siswas.nilais.mataPelajaran'])->findOrFail($kelas_id);
+        $kelas = Kelas::with('jurusan')->findOrFail($kelas_id);
+        $mapel = MataPelajaran::findOrFail($mapel_id);
+        $tahunAjaran = TahunAjaran::where('status', 'aktif')->first();
 
-        return view('guru.nilai.rekap', compact('kelas'));
+        $semester = $request->get('semester', '1');
+
+        $jadwal = $guru->jadwals()
+            ->where('kelas_id', $kelas_id)
+            ->where('mata_pelajaran_id', $mapel_id)
+            ->where('tahun_ajaran_id', $tahunAjaran?->id)
+            ->first();
+
+        if (!$jadwal) {
+            abort(403, 'Anda tidak memiliki hak akses untuk rekap nilai kelas ini.');
+        }
+
+        $siswas = Siswa::where('kelas_id', $kelas_id)
+            ->where('status', 'aktif')
+            ->orderBy('nama_lengkap')
+            ->get();
+
+        $nilais = Nilai::where('kelas_id', $kelas_id)
+            ->where('mata_pelajaran_id', $mapel_id)
+            ->where('guru_id', $guru->id)
+            ->where('semester', $semester)
+            ->where('tahun_ajaran_id', $tahunAjaran?->id)
+            ->get();
+
+        return view('guru.nilai.rekap', compact('kelas', 'mapel', 'siswas', 'nilais', 'semester', 'tahunAjaran'));
     }
 }

@@ -275,7 +275,7 @@
                     </div>
                     <div class="bg-white rounded-lg p-3 border border-gray-100">
                         <p class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Tanggal Masuk</p>
-                        <p class="text-sm font-semibold text-gray-900">{{ $siswa->tanggal_masuk?->format('d F Y') ?? '-' }}</p>
+                        <p class="text-sm font-semibold text-gray-900">{{ $siswa->tanggal_masuk?->translatedFormat('d F Y') ?? '-' }}</p>
                     </div>
                     <div class="bg-white rounded-lg p-3 border border-gray-100">
                         <p class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Status</p>

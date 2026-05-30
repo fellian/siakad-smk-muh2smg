@@ -69,7 +69,7 @@
                     <p>(_________________)</p>
                 </td>
                 <td style="border: none; width: 50%; text-align: center;">
-                    <p>Semarang, {{ now()->format('d F Y') }}</p>
+                    <p>Semarang, {{ now()->translatedFormat('d F Y') }}</p>
                     <p>Wali Kelas</p>
                     <br><br><br>
                     <p><strong>{{ $siswa->kelas?->waliKelas?->nama_lengkap ?? '(_________________)' }}</strong></p>

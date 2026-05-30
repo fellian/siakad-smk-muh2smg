@@ -10,6 +10,7 @@ use App\Models\TahunAjaran;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Schema;
 
 class AbsensiController extends Controller
 {
@@ -18,26 +19,201 @@ class AbsensiController extends Controller
         $siswa = Auth::user()->siswa;
         $tahunAjaran = TahunAjaran::where('status', 'aktif')->first();
 
+        if (!$siswa || !$siswa->kelas_id) {
+            return view('siswa.absensi.index', [
+                'jadwalHariIni' => collect([]),
+                'sesiPresensiAktif' => collect([]),
+                'presensiSudahIds' => collect([]),
+                'absensis' => collect([]),
+                'hadirBulanIni' => 0,
+                'alfaBulanIni' => 0,
+                'persenHadir' => 0,
+                'hadir' => 0,
+                'terlambat' => 0,
+                'izin' => 0,
+                'sakit' => 0,
+                'alfa' => 0,
+                'total' => 0,
+                'siswa' => $siswa,
+                'tahunAjaran' => $tahunAjaran
+            ]);
+        }
+        
+        $today = now()->toDateString();
+        $hariIni = now()->translatedFormat('l');
+
+        $jadwalHariIni = Jadwal::with(['mataPelajaran', 'guru'])
+            ->where('kelas_id', $siswa->kelas_id)
+            ->when($tahunAjaran, fn($q) => $q->where('tahun_ajaran_id', $tahunAjaran->id))
+            ->where('hari', $hariIni)
+            ->orderBy('jam_mulai')
+            ->get();
+        
+        $sesiPresensiAktif = PresensiSesi::with('jadwal')
+            ->where('tanggal', $today)
+            ->where(function($query) {
+                if (Schema::hasColumn('presensi_sesis', 'is_active')) {
+                    $query->where('is_active', 1);
+                } elseif (Schema::hasColumn('presensi_sesis', 'is_aktif')) {
+                    $query->where('is_aktif', 1);
+                } elseif (Schema::hasColumn('presensi_sesis', 'aktif')) {
+                    $query->where('aktif', 1);
+                } elseif (Schema::hasColumn('presensi_sesis', 'status')) {
+                    $query->where('status', 'aktif');
+                } else {
+                    $query->whereNotNull('id');
+                }
+            })
+            ->get();
+   
+        $presensiSudahIds = Absensi::where('siswa_id', $siswa->id)
+            ->whereDate('tanggal', $today)
+            ->pluck('presensi_sesi_id');
+        
+
         $scoped = fn () => $siswa->absensis()
             ->when($tahunAjaran?->id, fn ($q) => $q->whereHas('jadwal', fn ($jq) => $jq->where('tahun_ajaran_id', $tahunAjaran->id)));
-
+        
         $hadir = $scoped()->where('status', 'hadir')->count();
         $terlambat = $scoped()->where('status', 'terlambat')->count();
         $izin = $scoped()->where('status', 'izin')->count();
         $sakit = $scoped()->where('status', 'sakit')->count();
         $alfa = $scoped()->where('status', 'alfa')->count();
+        $total = $scoped()->count();
+        
+  
+        $bulanIni = now()->month;
+        $tahunIni = now()->year;
+        
+        $hadirBulanIni = Absensi::where('siswa_id', $siswa->id)
+            ->where('status', 'hadir')
+            ->whereMonth('tanggal', $bulanIni)
+            ->whereYear('tanggal', $tahunIni)
+            ->count();
+            
+        $alfaBulanIni = Absensi::where('siswa_id', $siswa->id)
+            ->whereIn('status', ['alfa', 'izin', 'sakit', 'terlambat'])
+            ->whereMonth('tanggal', $bulanIni)
+            ->whereYear('tanggal', $tahunIni)
+            ->count();
+        
 
         $absensis = $scoped()
             ->with(['jadwal.mataPelajaran', 'jadwal.guru', 'guru', 'presensiSesi'])
             ->orderByDesc('tanggal')
             ->orderByDesc('waktu_presensi')
-            ->paginate(20);
-
-        $total = $scoped()->count();
-
+            ->take(5)
+            ->get();
+        
+        $persenHadir = ($hadirBulanIni + $alfaBulanIni) > 0 
+            ? round(($hadirBulanIni / ($hadirBulanIni + $alfaBulanIni)) * 100) 
+            : 0;
+        
         return view('siswa.absensi.index', compact(
-            'siswa', 'absensis', 'tahunAjaran',
-            'hadir', 'terlambat', 'izin', 'sakit', 'alfa', 'total'
+            'jadwalHariIni',
+            'sesiPresensiAktif',
+            'presensiSudahIds',
+            'absensis',
+            'hadirBulanIni',
+            'alfaBulanIni',
+            'persenHadir',
+            'hadir',
+            'terlambat',
+            'izin',
+            'sakit',
+            'alfa',
+            'total',
+            'siswa',
+            'tahunAjaran'
+        ));
+    }
+    
+    public function rekap(Request $request)
+    {
+        $siswa = Auth::user()->siswa;
+        $tahunAjaran = TahunAjaran::where('status', 'aktif')->first();
+        
+        if (!$siswa) {
+            return view('siswa.absensi.rekap', [
+                'absensis' => collect([]),
+                'hadir' => 0,
+                'terlambat' => 0,
+                'izin' => 0,
+                'sakit' => 0,
+                'alfa' => 0,
+                'total' => 0,
+                'siswa' => $siswa,
+                'tahunAjaran' => $tahunAjaran
+            ]);
+        }
+        
+        $query = $siswa->absensis()
+            ->with(['jadwal.mataPelajaran', 'jadwal.guru', 'guru', 'presensiSesi'])
+            ->when($tahunAjaran?->id, fn ($q) => $q->whereHas('jadwal', fn ($jq) => $jq->where('tahun_ajaran_id', $tahunAjaran->id)));
+        
+  
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->whereHas('jadwal.mataPelajaran', function($q) use ($search) {
+                $q->where('nama_mapel', 'like', '%' . $search . '%');
+            });
+        }
+        
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->filled('bulan')) {
+            $query->whereMonth('tanggal', $request->bulan);
+        }
+        
+        if ($request->filled('tahun')) {
+            $query->whereYear('tanggal', $request->tahun);
+        }
+        
+        $absensis = $query->orderByDesc('tanggal')
+            ->orderByDesc('waktu_presensi')
+            ->paginate(15)
+            ->withQueryString();
+
+        $hadir = $siswa->absensis()
+            ->when($tahunAjaran?->id, fn ($q) => $q->whereHas('jadwal', fn ($jq) => $jq->where('tahun_ajaran_id', $tahunAjaran->id)))
+            ->where('status', 'hadir')
+            ->count();
+            
+        $terlambat = $siswa->absensis()
+            ->when($tahunAjaran?->id, fn ($q) => $q->whereHas('jadwal', fn ($jq) => $jq->where('tahun_ajaran_id', $tahunAjaran->id)))
+            ->where('status', 'terlambat')
+            ->count();
+            
+        $izin = $siswa->absensis()
+            ->when($tahunAjaran?->id, fn ($q) => $q->whereHas('jadwal', fn ($jq) => $jq->where('tahun_ajaran_id', $tahunAjaran->id)))
+            ->where('status', 'izin')
+            ->count();
+            
+        $sakit = $siswa->absensis()
+            ->when($tahunAjaran?->id, fn ($q) => $q->whereHas('jadwal', fn ($jq) => $jq->where('tahun_ajaran_id', $tahunAjaran->id)))
+            ->where('status', 'sakit')
+            ->count();
+            
+        $alfa = $siswa->absensis()
+            ->when($tahunAjaran?->id, fn ($q) => $q->whereHas('jadwal', fn ($jq) => $jq->where('tahun_ajaran_id', $tahunAjaran->id)))
+            ->where('status', 'alfa')
+            ->count();
+            
+        $total = $hadir + $terlambat + $izin + $sakit + $alfa;
+        
+        return view('siswa.absensi.rekap', compact(
+            'absensis',
+            'hadir',
+            'terlambat',
+            'izin',
+            'sakit',
+            'alfa',
+            'total',
+            'siswa',
+            'tahunAjaran'
         ));
     }
 
@@ -62,8 +238,26 @@ class AbsensiController extends Controller
             ->with('jadwal')
             ->findOrFail($data['presensi_sesi_id']);
 
-        if (! $sesi->aktif()) {
-            return redirect()->back()->with('error', 'Sesi presensi sudah ditutup oleh guru.');
+        if (method_exists($sesi, 'aktif')) {
+            if (! $sesi->aktif()) {
+                return redirect()->back()->with('error', 'Sesi presensi sudah ditutup oleh guru.');
+            }
+        } else {
+
+            $isActive = false;
+            if (Schema::hasColumn('presensi_sesis', 'is_active') && $sesi->is_active == 1) {
+                $isActive = true;
+            } elseif (Schema::hasColumn('presensi_sesis', 'is_aktif') && $sesi->is_aktif == 1) {
+                $isActive = true;
+            } elseif (Schema::hasColumn('presensi_sesis', 'aktif') && $sesi->aktif == 1) {
+                $isActive = true;
+            } elseif (Schema::hasColumn('presensi_sesis', 'status') && $sesi->status == 'aktif') {
+                $isActive = true;
+            }
+            
+            if (! $isActive) {
+                return redirect()->back()->with('error', 'Sesi presensi sudah ditutup oleh guru.');
+            }
         }
 
         if (! $sesi->tanggal?->isToday()) {
@@ -104,11 +298,6 @@ class AbsensiController extends Controller
         return redirect()->back()->with('success', 'Kehadiran berhasil dicatat.');
     }
 
-    /**
-     * Hadir: presensi pada atau sebelum jam selesai slot jadwal (selama sesi masih dibuka).
-     * Terlambat: presensi setelah jam selesai slot namun sebelum guru menutup sesi (bukan alfa;
-     * alfa untuk siswa tanpa presensi ditangani guru lewat "otomatis isi alfa" saat tutup sesi).
-     */
     protected function statusOtomatisDariJadwal(Jadwal $jadwal, Carbon $tanggalSesi, Carbon $waktuPresensi): string
     {
         $basis = $tanggalSesi->copy()->startOfDay();

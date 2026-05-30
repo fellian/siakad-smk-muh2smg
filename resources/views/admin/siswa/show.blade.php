@@ -104,7 +104,7 @@
                             <p class="text-gray-500 text-xs">Tempat, Tanggal Lahir</p>
                             <p class="font-medium text-gray-900">
                                 @if($siswa->tempat_lahir && $siswa->tanggal_lahir)
-                                    {{ $siswa->tempat_lahir }}, {{ $siswa->tanggal_lahir->format('d F Y') }}
+                                    {{ $siswa->tempat_lahir }}, {{ $siswa->tanggal_lahir->translatedFormat('d F Y') }}
                                 @else
                                     -
                                 @endif
@@ -402,8 +402,8 @@
                         <tbody class="divide-y divide-gray-100">
                             @foreach($siswa->absensis->sortByDesc('tanggal')->take(10) as $absensi)
                             <tr class="hover:bg-gray-50 transition-colors">
-                                <td class="px-4 py-3 text-gray-900">{{ $absensi->tanggal->format('d F Y') }}</td>
-                                <td class="px-4 py-3 text-gray-500 text-xs">{{ $absensi->waktu_presensi?->format('H:i d/m/Y') ?? '—' }}</td>
+                                <td class="px-4 py-3 text-gray-900">{{ $absensi->tanggal->translatedFormat('d F Y') }}</td>
+                                <td class="px-4 py-3 text-gray-500 text-xs">{{ $absensi->waktu_presensi?->translatedFormat('H:i d/m/Y') ?? '—' }}</td>
                                 <td class="px-4 py-3 text-gray-900">{{ $absensi->jadwal->mataPelajaran->nama_mapel }}</td>
                                 <td class="px-4 py-3 text-center">
                                     @php
@@ -462,11 +462,11 @@
                     </div>
                     <div class="bg-gray-50 rounded-lg p-3">
                         <p class="text-gray-500 text-xs mb-1">Akun Dibuat</p>
-                        <p class="font-semibold text-gray-900 text-sm">{{ $siswa->user->created_at->format('d F Y') }}</p>
+                        <p class="font-semibold text-gray-900 text-sm">{{ $siswa->user->created_at->translatedFormat('d F Y') }}</p>
                     </div>
                     <div class="bg-gray-50 rounded-lg p-3">
                         <p class="text-gray-500 text-xs mb-1">Terakhir Update</p>
-                        <p class="font-semibold text-gray-900 text-sm">{{ $siswa->user->updated_at->format('d F Y') }}</p>
+                        <p class="font-semibold text-gray-900 text-sm">{{ $siswa->user->updated_at->translatedFormat('d F Y') }}</p>
                     </div>
                 </div>
             </div>

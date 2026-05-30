@@ -59,7 +59,7 @@ Route::middleware(['auth', 'role:guru'])->prefix('guru')->name('guru.')->group(f
     Route::get('nilai', [App\Http\Controllers\Guru\NilaiController::class, 'index'])->name('nilai.index');
     Route::get('nilai/input/{kelas_id}/{mapel_id}', [App\Http\Controllers\Guru\NilaiController::class, 'inputNilai'])->name('nilai.input');
     Route::post('nilai/store', [App\Http\Controllers\Guru\NilaiController::class, 'storeNilai'])->name('nilai.store');
-    Route::get('nilai/rekap/{kelas_id}', [App\Http\Controllers\Guru\NilaiController::class, 'rekap'])->name('nilai.rekap');
+    Route::get('nilai/rekap/{kelas_id}/{mapel_id}', [App\Http\Controllers\Guru\NilaiController::class, 'rekap'])->name('nilai.rekap');
     Route::get('nilai/export/{kelas_id}', [App\Http\Controllers\Guru\NilaiController::class, 'export'])->name('nilai.export');
 
     Route::get('absensi', [App\Http\Controllers\Guru\AbsensiController::class, 'index'])->name('absensi.index');
@@ -96,6 +96,7 @@ Route::middleware(['auth', 'role:siswa'])->prefix('siswa')->name('siswa.')->grou
     Route::get('jadwal', [App\Http\Controllers\Siswa\JadwalController::class, 'index'])->name('jadwal.index');
 
     Route::get('absensi', [App\Http\Controllers\Siswa\AbsensiController::class, 'index'])->name('absensi.index');
+    Route::get('absensi/rekap', [App\Http\Controllers\Siswa\AbsensiController::class, 'rekap'])->name('absensi.rekap');
     Route::post('absensi/presensi', [App\Http\Controllers\Siswa\AbsensiController::class, 'simpanPresensi'])->name('absensi.presensi.store');
 
     Route::get('pengumuman', [App\Http\Controllers\Siswa\PengumumanController::class, 'index'])->name('pengumuman.index');
