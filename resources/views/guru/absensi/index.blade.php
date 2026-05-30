@@ -86,11 +86,6 @@
                                 </div>
                                 <p class="font-medium mb-1">{{ $jadwal->mataPelajaran->nama_mapel }}</p>
                                 <p class="text-sm text-gray-500 mb-3">Ruang {{ $jadwal->ruangan ?? '-' }}</p>
-                                @if($hari === $hariIni)
-                                    <p class="text-xs text-gray-500 mb-2">Gunakan panel <strong>Jadwal hari ini</strong> di atas untuk membuka sesi.</p>
-                                @else
-                                    <p class="text-xs text-amber-700 bg-amber-50 border border-amber-100 rounded px-2 py-1">Presensi hanya dapat dibuka pada hari pelajaran (<strong>{{ $hari }}</strong>).</p>
-                                @endif
                             </div>
                         @endforeach
                     </div>
