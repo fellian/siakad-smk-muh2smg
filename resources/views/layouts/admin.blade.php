@@ -6,7 +6,6 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Admin Dashboard') | SIAKAD SMK Muhammadiyah 2</title>
     
-    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -15,17 +14,16 @@
     <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
     <link rel="shortcut icon" type="image/png" href="{{ asset('favicon.png') }}">
     
-    <!-- Tailwind CSS & JS -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     
-    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     
-    <!-- DataTables -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
     
     <style>
         body { font-family: 'Inter', sans-serif; }
+
+        [x-cloak] { display: none !important; }
         
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
@@ -44,7 +42,6 @@
 <body class="bg-gray-50 text-gray-800 antialiased overflow-hidden" x-data="{ sidebarOpen: false, profileOpen: false }">
     <div class="flex h-screen w-full bg-gray-50">
         
-        <!-- Mobile Sidebar Backdrop -->
         <div x-show="sidebarOpen" 
              x-transition:enter="transition-opacity ease-linear duration-300"
              x-transition:enter-start="opacity-0"
@@ -55,15 +52,13 @@
              class="fixed inset-0 z-40 bg-gray-900/50 backdrop-blur-sm lg:hidden" 
              @click="sidebarOpen = false" style="display: none;"></div>
         
-        <!-- Sidebar -->
-        <div :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'" 
+        <div x-cloak
+             :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'" 
              class="fixed inset-y-0 left-0 z-50 w-72 bg-white border-r border-gray-200 transition-transform duration-300 ease-in-out lg:static lg:translate-x-0 lg:w-72 flex flex-col shadow-sm">
             @include('components.sidebar')
         </div>
         
-        <!-- Main Content -->
         <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
-            <!-- Header -->
             <header class="bg-white border-b border-gray-200 shadow-sm z-30">
                 <div class="flex items-center justify-between px-4 sm:px-6 lg:px-8 py-3 h-16">
                     <div class="flex items-center">
@@ -74,10 +69,8 @@
                     </div>
                     
                     <div class="flex items-center space-x-3 sm:space-x-5">
-                        
                         <div class="h-8 w-px bg-gray-200 hidden sm:block mx-2"></div>
                         
-                        <!-- Profile Dropdown -->
                         <div class="relative">
                             <button @click="profileOpen = !profileOpen" @click.away="profileOpen = false" class="flex items-center space-x-3 focus:outline-none hover:bg-gray-50 p-1.5 rounded-xl transition-colors">
                                 <div class="hidden md:block text-right">
@@ -89,7 +82,6 @@
                                 </div>
                             </button>
                             
-                            <!-- Dropdown Menu -->
                             <div x-show="profileOpen" 
                                  x-transition:enter="transition ease-out duration-100"
                                  x-transition:enter-start="transform opacity-0 scale-95"
@@ -119,7 +111,6 @@
                 </div>
             </header>
             
-            <!-- Main Content Area -->
             <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50/50 p-4 sm:p-6 lg:p-8">
                 <div class="max-w-7xl mx-auto">
                     @if(session('success'))
@@ -148,7 +139,6 @@
         </div>
     </div>
     
-    <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
     <script>
